@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HardGG - Gamer's Paradise</title>
+  <!-- Include Tailwind CSS from CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Include React and ReactDOM from CDN -->
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <!-- Babel for JSX -->
+  <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+  <!-- Custom Fonts and Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Press Start 2P', cursive;
+    }
+    .neon-text {
+      text-shadow:
+          0 0 5px #00ff00,
+          0 0 10px #00ff00,
+          0 0 20px #00ff00,
+          0 0 40px #00ff00,
+          0 0 80px #00ff00;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+  <div id="root"></div>
+
+  <script type="text/babel">
+
+    // LinkCard Component
+    function LinkCard({ link, title, description }) {
+      return (
+        <div className="bg-gray-800 p-4 rounded-lg border-4 border-green-400">
+          <a href={link} target="_blank" rel="noopener noreferrer" className="no-underline">
+            <h3 className="text-2xl mb-2 text-green-300">{title}</h3>
+          </a>
+          <p className="text-gray-400">{description}</p>
+        </div>
+      );
+    }
+
+    // App Component
+    function App() {
+      const links = [
+        { link: "https://owais.me", title: "Owais.me", description: "Visit my personal website for more about me." },
+        { link: "https://gamer-choice.com", title: "Gamer Choice", description: "Buy game currency, services, accounts, and items." }
+      ];
+
+      return (
+        <div>
+          {/* Header */}
+          <header className="text-center py-6 bg-gray-800 border-b-4 border-green-400">
+            <h1 className="text-4xl md:text-6xl neon-text text-green-400">HardGG</h1>
+            <p className="text-xl md:text-2xl text-green-300">Welcome to the Gamer's Paradise</p>
+          </header>
+
+          {/* Main Content */}
+          <main className="flex flex-col items-center py-10">
+            <section className="w-11/12 md:w-8/12 lg:w-6/12 mb-10">
+              <h2 className="text-3xl md:text-4xl text-green-400 neon-text mb-6 text-center">Explore More</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {links.map(link => (
+                  <LinkCard key={link.title} link={link.link} title={link.title} description={link.description} />
+                ))}
+              </div>
+            </section>
+
+            <section className="w-11/12 md:w-8/12 lg:w-6/12 mb-10">
+              <h2 className="text-3xl md:text-4xl text-green-400 neon-text mb-6 text-center">Upcoming Events</h2>
+              <div className="bg-gray-800 p-6 rounded-lg border-4 border-green-400">
+                <p className="text-gray-400 mb-4">Stay tuned for our upcoming gaming events and tournaments. Show your skills and win amazing prizes!</p>
+              </div>
+            </section>
+          </main>
+
+          {/* Footer */}
+          <footer className="py-6 bg-gray-800 text-center border-t-4 border-green-400">
+            <p className="text-gray-400">&copy; 2023 HardGG. All Rights Reserved.</p>
+          </footer>
+        </div>
+      );
+    }
+
+    // Render the App component into the #root div
+    ReactDOM.render(<App />, document.getElementById('root'));
+
+  </script>
+</body>
+</html>
