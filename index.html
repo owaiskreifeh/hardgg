@@ -1,94 +1,336 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HardGG - Gamer's Paradise</title>
-  <!-- Include Tailwind CSS from CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <!-- Include React and ReactDOM from CDN -->
-  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
-  <!-- Babel for JSX -->
-  <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
-  <!-- Custom Fonts and Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Press Start 2P', cursive;
-    }
-    .neon-text {
-      text-shadow:
-          0 0 5px #00ff00,
-          0 0 10px #00ff00,
-          0 0 20px #00ff00,
-          0 0 40px #00ff00,
-          0 0 80px #00ff00;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitGirl Repacks - Modern Gaming Hub</title>
+    
+    <!-- Performance optimizations -->
+    <link rel="dns-prefetch" href="//cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="//www.clarity.ms">
+    <link rel="dns-prefetch" href="//picsum.photos">
+    
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://www.clarity.ms">
+    <link rel="preconnect" href="https://picsum.photos">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="styles.css" as="style">
+    <link rel="preload" href="script.js" as="script">
+    <link rel="preload" href="tailwind-config.js" as="script">
+    
+    <!-- Preload fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" as="style">
+    
+    <!-- Critical CSS inline for above-the-fold content -->
+    <style>
+        /* Critical CSS for initial render */
+        body { 
+            margin: 0; 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+            background: #0A0A0F;
+            color: #FFFFFF;
+        }
+        .gaming-bg { 
+            background: linear-gradient(135deg, #0A0A0F 0%, #1A1A2E 50%, #16213E 100%);
+            min-height: 100vh;
+        }
+        .gaming-header {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #27272A;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+        }
+        .gaming-logo {
+            font-family: 'Orbitron', monospace;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00D4FF, #7C3AED);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .container { 
+            width: 100%; 
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        .gaming-card {
+            background: #1E1E2E;
+            border: 1px solid #27272A;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .gaming-button {
+            background: linear-gradient(135deg, #00D4FF 0%, #0099CC 100%);
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            font-weight: 600;
+            padding: 0.5rem 1.5rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+    </style>
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- External JavaScript libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+    
+    <!-- Microsoft Clarity Analytics -->
+    <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "py2etcr18e");
+    </script>
+    
+    <!-- Tailwind Configuration -->
+    <script src="tailwind-config.js"></script>
+    
+    <!-- Meta tags for performance -->
+    <meta name="description" content="Modern Gaming Hub - Browse and search through a collection of repacked games with advanced filtering and search capabilities.">
+    <meta name="keywords" content="Gaming Hub, games, repacks, download, PC games, modern gaming">
+    <meta name="author" content="Modern Gaming Hub">
+    
+    <!-- Open Graph tags -->
+    <meta property="og:title" content="Modern Gaming Hub - Next Gen Gaming Experience">
+    <meta property="og:description" content="Browse and search through a collection of repacked games with modern UI">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://hardgg.com">
+    
+    <!-- Twitter Card tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Modern Gaming Hub - Next Gen Gaming Experience">
+    <meta name="twitter:description" content="Browse and search through a collection of repacked games with modern UI">
+    
+    <!-- Performance meta tags -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- PWA meta tags -->
+    <meta name="theme-color" content="#00D4FF">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Modern Gaming Hub">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
 </head>
-<body class="bg-gray-900 text-gray-200">
-  <div id="root"></div>
 
-  <script type="text/babel">
+<body class="gaming-bg">
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 gaming-button z-50">
+        Skip to main content
+    </a>
 
-    // LinkCard Component
-    function LinkCard({ link, title, description }) {
-      return (
-        <div className="bg-gray-800 p-4 rounded-lg border-4 border-green-400">
-          <a href={link} target="_blank" rel="noopener noreferrer" className="no-underline">
-            <h3 className="text-2xl mb-2 text-green-300">{title}</h3>
-          </a>
-          <p className="text-gray-400">{description}</p>
+    <!-- Modern Gaming Header -->
+    <header class="gaming-header" role="banner">
+        <div class="gaming-header-content">
+            <div class="flex-1">
+                <h1 class="gaming-logo text-center text-lg sm:text-2xl md:text-3xl mb-2">
+                    <span class="text-primary">▲</span>
+                    <span class="text-secondary">MODERN</span>
+                    <span class="text-primary">GAMING</span>
+                    <span class="text-accent">HUB</span>
+                    <span class="text-primary">▼</span>
+                </h1>
+                <p class="text-center text-xs sm:text-sm text-secondary mb-2">Next Generation Gaming Experience</p>
+            </div>
+            <button id="menuButton" class="gaming-button-secondary ml-2 sm:ml-4" aria-label="Open menu">
+                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
         </div>
-      );
-    }
+    </header>
 
-    // App Component
-    function App() {
-      const links = [
-        { link: "https://owais.me", title: "Owais.me", description: "Visit my personal website for more about me." },
-        { link: "https://gamer-choice.com", title: "Gamer Choice", description: "Buy game currency, services, accounts, and items." }
-      ];
-
-      return (
-        <div>
-          {/* Header */}
-          <header className="text-center py-6 bg-gray-800 border-b-4 border-green-400">
-            <h1 className="text-4xl md:text-6xl neon-text text-green-400">HardGG</h1>
-            <p className="text-xl md:text-2xl text-green-300">Welcome to the Gamer's Paradise</p>
-          </header>
-
-          {/* Main Content */}
-          <main className="flex flex-col items-center py-10">
-            <section className="w-11/12 md:w-8/12 lg:w-6/12 mb-10">
-              <h2 className="text-3xl md:text-4xl text-green-400 neon-text mb-6 text-center">Explore More</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {links.map(link => (
-                  <LinkCard key={link.title} link={link.link} title={link.title} description={link.description} />
-                ))}
-              </div>
-            </section>
-
-            <section className="w-11/12 md:w-8/12 lg:w-6/12 mb-10">
-              <h2 className="text-3xl md:text-4xl text-green-400 neon-text mb-6 text-center">Upcoming Events</h2>
-              <div className="bg-gray-800 p-6 rounded-lg border-4 border-green-400">
-                <p className="text-gray-400 mb-4">Stay tuned for our upcoming gaming events and tournaments. Show your skills and win amazing prizes!</p>
-              </div>
-            </section>
-          </main>
-
-          {/* Footer */}
-          <footer className="py-6 bg-gray-800 text-center border-t-4 border-green-400">
-            <p className="text-gray-400">&copy; 2023 HardGG. All Rights Reserved.</p>
-          </footer>
+    <!-- Modern Modal Menu -->
+    <div id="menuModal" class="gaming-modal hidden">
+        <div class="gaming-modal-content max-w-sm w-full mx-4">
+            <div class="gaming-modal-header">
+                <h2 class="gaming-font-bold text-xl text-primary">Menu</h2>
+                <button id="closeMenuModal" class="gaming-modal-close">✕</button>
+            </div>
+            <div class="gaming-modal-body">
+                <nav class="space-y-3">
+                    <button class="gaming-nav-button w-full text-left" id="menuAbout">About</button>
+                    <button class="gaming-nav-button w-full text-left" id="menuSettings">Settings</button>
+                    <button class="gaming-nav-button w-full text-left" id="menuFavorites">Favorites</button>
+                    <button class="gaming-nav-button w-full text-left" id="menuRecent">Recent</button>
+                    <button class="gaming-nav-button w-full text-left" id="menuHelp">Help</button>
+                    <button class="gaming-nav-button w-full text-left" id="menuContact">Contact</button>
+                </nav>
+            </div>
         </div>
-      );
-    }
+    </div>
 
-    // Render the App component into the #root div
-    ReactDOM.render(<App />, document.getElementById('root'));
+    <!-- Modern Breadcrumb Navigation -->
+    <nav class="container py-3" aria-label="Breadcrumb">
+        <ol class="flex items-center space-x-2 text-sm gaming-font">
+            <li><a href="#" class="text-primary hover:text-secondary transition-colors">Home</a></li>
+            <li class="text-muted">/</li>
+            <li class="text-white">Games</li>
+            <li id="breadcrumbFilters" class="hidden">
+                <span class="text-muted">/</span>
+                <span class="text-success">Filtered</span>
+            </li>
+        </ol>
+    </nav>
 
-  </script>
+    <!-- Main Content -->
+    <main id="main-content" class="container py-6" role="main">
+        <!-- Modern Quick Actions and Grid Controls -->
+        <section class="flex flex-wrap gap-3 mb-6 items-center justify-center">
+            <button id="showFavorites" class="gaming-button text-sm">❤️ Favorites</button>
+            <button id="showRecent" class="gaming-button text-sm">🕒 Recent</button>
+            <button id="clearFilters" class="gaming-button text-sm">🧹 Clear Filters</button>
+            <div class="flex items-center gap-2 ml-4">
+                <span class="gaming-font text-primary text-xs">Grid:</span>
+                <button id="gridSmall" class="gaming-button-secondary px-3 py-1 text-xs">S</button>
+                <button id="gridMedium" class="gaming-button-secondary px-3 py-1 text-xs">M</button>
+                <button id="gridLarge" class="gaming-button-secondary px-3 py-1 text-xs">L</button>
+            </div>
+        </section>
+
+        <!-- Modern Search Bar -->
+        <section class="mb-6">
+            <div class="gaming-search">
+                <svg class="gaming-search-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input
+                    id="searchInput"
+                    type="text"
+                    class="gaming-search-input"
+                    placeholder="Search games..."
+                    autocomplete="off"
+                    aria-label="Search games"
+                />
+            </div>
+        </section>
+
+        <!-- Modern Tags Filter -->
+        <section class="mb-6" aria-labelledby="tags-heading">
+            <h2 id="tags-heading" class="text-primary gaming-font text-sm mb-3">// FILTER BY TAGS</h2>
+            <div id="tagsContainer" class="flex flex-wrap gap-2 max-h-32 overflow-y-auto gaming-scrollbar" role="group" aria-label="Game tags"></div>
+        </section>
+
+        <!-- Modern Loading State -->
+        <section id="loading" class="gaming-loading" aria-live="polite" aria-label="Loading games">
+            <div class="gaming-spinner"></div>
+            <p class="gaming-loading-text">LOADING GAMES...</p>
+        </section>
+
+        <!-- Modern Stats -->
+        <section id="stats" class="text-center py-4 text-muted gaming-font text-sm" aria-live="polite"></section>
+
+        <!-- Modern Games Container -->
+        <section id="gamesContainer" class="pb-8" aria-label="Games grid">
+            <div id="gamesGrid" class="gaming-grid gaming-grid-medium" role="grid" aria-label="Games"></div>
+        </section>
+    </main>
+
+    <!-- Modern Desktop Modal -->
+    <div id="gameModal" class="gaming-modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="gaming-modal-content max-w-4xl w-full">
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- Modern Mobile Fullscreen -->
+    <div id="mobileModal" class="gaming-modal hidden" role="dialog" aria-modal="true" aria-labelledby="mobile-modal-title">
+        <div class="gaming-modal-content w-full h-full max-w-none max-h-none rounded-none">
+            <!-- Mobile Header -->
+            <div class="gaming-modal-header">
+                <button id="mobileBack" class="gaming-button text-sm" aria-label="Go back">← BACK</button>
+                <button id="mobileClose" class="gaming-modal-close" aria-label="Close modal">✕</button>
+            </div>
+            
+            <!-- Mobile Content -->
+            <div class="gaming-modal-body h-full">
+                <div id="mobileContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modern Loading Indicator -->
+    <div id="loadingIndicator" class="fixed bottom-4 right-4 gaming-card px-4 py-2 gaming-font text-sm hidden" aria-live="polite">
+        Loading more games...
+    </div>
+
+    <!-- Modern Error Boundary -->
+    <div id="errorBoundary" class="fixed top-4 right-4 bg-error text-white px-4 py-2 rounded-lg gaming-font text-sm hidden" role="alert">
+        An error occurred. Please refresh the page.
+    </div>
+
+    <!-- Modern Keyboard Shortcuts Help -->
+    <div id="keyboardHelp" class="gaming-modal hidden">
+        <div class="gaming-modal-content max-w-2xl w-full mx-4">
+            <div class="gaming-modal-header">
+                <h2 class="gaming-font-bold text-xl text-primary">Keyboard Shortcuts</h2>
+                <button id="closeKeyboardHelp" class="gaming-modal-close">✕</button>
+            </div>
+            <div class="gaming-modal-body">
+                <div class="space-y-3 text-sm gaming-font">
+                    <div class="flex justify-between items-center">
+                        <span class="text-white font-mono">/</span>
+                        <span class="text-primary">Focus search</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-white font-mono">Esc</span>
+                        <span class="text-primary">Close modal / Clear search</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-white font-mono">F</span>
+                        <span class="text-primary">Toggle favorites</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-white font-mono">R</span>
+                        <span class="text-primary">Show recent searches</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-white font-mono">C</span>
+                        <span class="text-primary">Clear all filters</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-white font-mono">?</span>
+                        <span class="text-primary">Show this help</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main JavaScript -->
+    <script type="module" src="js/main.js?v=1.0.2"></script>
+    
+    <!-- Service Worker registration for PWA capabilities -->
+    <!-- <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script> -->
 </body>
+
 </html>
