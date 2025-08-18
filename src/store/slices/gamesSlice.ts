@@ -10,16 +10,13 @@ export const fetchGames = createAsyncThunk(
       const state = getState() as any;
       console.log('Current state:', state); // Debug log
       
-      // For initial load (page 1), don't depend on search state
-      let searchState = null;
-      if (page > 1) {
-        searchState = state.search || {
-          query: '',
-          filters: {},
-          sortBy: 'title',
-          sortOrder: 'asc'
-        };
-      }
+      // Always read current search state so page 1 requests include query/filters
+      const searchState = state.search || {
+        query: '',
+        filters: {},
+        sortBy: 'title',
+        sortOrder: 'asc'
+      };
       
       console.log('Search state:', searchState); // Debug log
       
@@ -29,31 +26,29 @@ export const fetchGames = createAsyncThunk(
         limit: '20'
       });
 
-      // Only add search parameters if searchState exists
-      if (searchState) {
-        if (searchState.query) {
-          params.append('q', searchState.query);
-        }
+      // Add search parameters from searchState
+      if (searchState.query) {
+        params.append('q', searchState.query);
+      }
 
-        if (searchState.filters?.genre?.length) {
-          params.append('genre', searchState.filters.genre.join(','));
-        }
+      if (searchState.filters?.genre?.length) {
+        params.append('genre', searchState.filters.genre.join(','));
+      }
 
-        if (searchState.filters?.size) {
-          params.append('size', searchState.filters.size);
-        }
+      if (searchState.filters?.size) {
+        params.append('size', searchState.filters.size);
+      }
 
-        if (searchState.filters?.language?.length) {
-          params.append('language', searchState.filters.language.join(','));
-        }
+      if (searchState.filters?.language?.length) {
+        params.append('language', searchState.filters.language.join(','));
+      }
 
-        if (searchState.sortBy) {
-          params.append('sortBy', searchState.sortBy);
-        }
+      if (searchState.sortBy) {
+        params.append('sortBy', searchState.sortBy);
+      }
 
-        if (searchState.sortOrder) {
-          params.append('sortOrder', searchState.sortOrder);
-        }
+      if (searchState.sortOrder) {
+        params.append('sortOrder', searchState.sortOrder);
       }
 
       const url = `/api/games?${params.toString()}`;
