@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Search, X } from 'lucide-react';
 import { debounce } from '@/lib/utils';
 
@@ -9,41 +9,58 @@ interface SearchBarProps {
   onChange: (value: string) => void;
   placeholder?: string;
   className?: string;
+  loading?: boolean;
 }
 
 export function SearchBar({
   value,
   onChange,
   placeholder = 'Search...',
-  className = ''
+  className = '',
+  loading = false
 }: SearchBarProps) {
   const [localValue, setLocalValue] = useState(value);
 
-  // Debounced search to avoid too many API calls
-  const debouncedOnChange = debounce(onChange, 300);
+  // Memoized debounced function to prevent recreation on every render
+  const debouncedOnChange = useMemo(
+    () => debounce(onChange, 300),
+    [onChange]
+  );
 
+  // Update local value when prop changes
   useEffect(() => {
     setLocalValue(value);
   }, [value]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setLocalValue(newValue);
     debouncedOnChange(newValue);
-  };
+  }, [debouncedOnChange]);
 
-  const handleClear = () => {
+  const handleClear = useCallback(() => {
     setLocalValue('');
     onChange('');
-  };
+  }, [onChange]);
+
+  const handleSuggestionClick = useCallback((suggestion: string) => {
+    setLocalValue(suggestion);
+    onChange(suggestion);
+  }, [onChange]);
 
   return (
     <div className={`relative ${className}`}>
       <div className="relative">
-        <Search
-          className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-          size={20}
-        />
+        {loading ? (
+          <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-retro-cyan"></div>
+          </div>
+        ) : (
+          <Search
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={20}
+          />
+        )}
         <input
           type="text"
           value={localValue}
@@ -69,28 +86,19 @@ export function SearchBar({
           <div className="p-2">
             <div className="text-xs text-gray-400 mb-2 px-2">Quick searches</div>
             <button
-              onClick={() => {
-                setLocalValue('Action');
-                onChange('Action');
-              }}
+              onClick={() => handleSuggestionClick('Action')}
               className="block w-full text-left px-2 py-1 text-sm text-gray-300 hover:bg-gaming-border rounded transition-colors duration-200"
             >
               Action Games
             </button>
             <button
-              onClick={() => {
-                setLocalValue('RPG');
-                onChange('RPG');
-              }}
+              onClick={() => handleSuggestionClick('RPG')}
               className="block w-full text-left px-2 py-1 text-sm text-gray-300 hover:bg-gaming-border rounded transition-colors duration-200"
             >
               RPG Games
             </button>
             <button
-              onClick={() => {
-                setLocalValue('Open World');
-                onChange('Open World');
-              }}
+              onClick={() => handleSuggestionClick('Open World')}
               className="block w-full text-left px-2 py-1 text-sm text-gray-300 hover:bg-gaming-border rounded transition-colors duration-200"
             >
               Open World Games

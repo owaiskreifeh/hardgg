@@ -8,13 +8,15 @@ interface StickySearchBarProps {
   onChange: (value: string) => void;
   placeholder?: string;
   className?: string;
+  loading?: boolean;
 }
 
 export function StickySearchBar({
   value,
   onChange,
   placeholder = 'Search games...',
-  className = ''
+  className = '',
+  loading = false
 }: StickySearchBarProps) {
   return (
     <div className={cn(
@@ -26,6 +28,7 @@ export function StickySearchBar({
         onChange={onChange}
         placeholder={placeholder}
         className="w-full"
+        loading={loading}
       />
     </div>
   );

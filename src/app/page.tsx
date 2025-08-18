@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Header } from '@/components/Header';
 import { SearchBar } from '@/components/SearchBar';
 import { StickySearchBar } from '@/components/StickySearchBar';
@@ -15,6 +15,7 @@ import { useGames } from '@/store/hooks/useGames';
 import { useSearch } from '@/store/hooks/useSearch';
 import { useUI } from '@/store/hooks/useUI';
 import { Game } from '@/types/game';
+import { debounce } from '@/lib/utils';
 
 export default function HomePage() {
   const {
@@ -58,18 +59,39 @@ export default function HomePage() {
   console.log('HomePage render - loading:', loading);
   console.log('HomePage render - error:', error);
 
+  // Debounced search function to prevent too many API calls
+  const debouncedSearch = useCallback(
+    debounce((query: string) => {
+      if (searchState) {
+        resetPaginationState();
+        loadGames();
+      }
+    }, 500), // Increased debounce time to 500ms
+    [searchState, resetPaginationState, loadGames]
+  );
+
   useEffect(() => {
     console.log('HomePage - Initial loadGames effect');
     loadGames();
   }, [loadGames]);
 
-  // Reset pagination when search or filters change
+  // Handle search query changes with debouncing
   useEffect(() => {
-    if (searchState) {
+    if (searchState?.query !== undefined) {
+      // Only search if query has at least 2 characters or is empty
+      if (searchState.query.length >= 2 || searchState.query.length === 0) {
+        debouncedSearch(searchState.query);
+      }
+    }
+  }, [searchState?.query, debouncedSearch]);
+
+  // Handle filter and sort changes (no debouncing needed for these)
+  useEffect(() => {
+    if (searchState && (searchState.filters || searchState.sortBy || searchState.sortOrder)) {
       resetPaginationState();
       loadGames();
     }
-  }, [searchState?.query, searchState?.filters, searchState?.sortBy, searchState?.sortOrder, resetPaginationState, loadGames]);
+  }, [searchState?.filters, searchState?.sortBy, searchState?.sortOrder, resetPaginationState, loadGames]);
 
   const handleGameClick = (game: Game) => {
     selectGame(game);
@@ -146,6 +168,7 @@ export default function HomePage() {
         value={searchState.query}
         onChange={handleSearchChange}
         placeholder="Search games..."
+        loading={loading}
       />
 
       <main className="container mx-auto px-4 py-8">
@@ -157,6 +180,7 @@ export default function HomePage() {
                 value={searchState.query}
                 onChange={handleSearchChange}
                 placeholder="Search games..."
+                loading={loading}
               />
 
               <FilterPanel
