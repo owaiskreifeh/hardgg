@@ -16,9 +16,9 @@ const orbitron = Orbitron({
 });
 
 export const metadata: Metadata = {
-  title: 'FitGirl Repacks - Modern Gaming Hub',
+  title: 'FitGirl Repacks - Repacked Games',
   description: 'Browse and search through a collection of repacked games with advanced filtering and search capabilities.',
-  keywords: ['games', 'repacks', 'gaming', 'download', 'fitgirl'],
+  keywords: ['games', 'repacks', 'gaming', 'download', 'fitgirl', 'repacked'],
   authors: [{ name: 'FitGirl Repacks' }],
   viewport: 'width=device-width, initial-scale=1',
   themeColor: '#06B6D4',
@@ -34,14 +34,14 @@ export const metadata: Metadata = {
     ]
   },
   openGraph: {
-    title: 'FitGirl Repacks - Modern Gaming Hub',
+    title: 'FitGirl Repacks - Repacked Games',
     description: 'Browse and search through a collection of repacked games with advanced filtering and search capabilities.',
     type: 'website',
     images: ['/screenshot1.png']
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'FitGirl Repacks - Modern Gaming Hub',
+    title: 'FitGirl Repacks - Repacked Games',
     description: 'Browse and search through a collection of repacked games with advanced filtering and search capabilities.',
     images: ['/screenshot1.png']
   }

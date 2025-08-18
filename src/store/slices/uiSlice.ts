@@ -4,6 +4,7 @@ interface UIState {
   isModalOpen: boolean;
   isLoading: boolean;
   sidebarOpen: boolean;
+  mobileMenuOpen: boolean;
   theme: 'light' | 'dark';
   notifications: Array<{
     id: string;
@@ -17,6 +18,7 @@ const initialState: UIState = {
   isModalOpen: false,
   isLoading: false,
   sidebarOpen: false,
+  mobileMenuOpen: false,
   theme: 'light',
   notifications: []
 };
@@ -33,6 +35,9 @@ const uiSlice = createSlice({
     },
     setSidebarOpen: (state, action: PayloadAction<boolean>) => {
       state.sidebarOpen = action.payload;
+    },
+    setMobileMenuOpen: (state, action: PayloadAction<boolean>) => {
+      state.mobileMenuOpen = action.payload;
     },
     setTheme: (state, action: PayloadAction<'light' | 'dark'>) => {
       state.theme = action.payload;
@@ -59,6 +64,7 @@ export const {
   setModalOpen,
   setLoading,
   setSidebarOpen,
+  setMobileMenuOpen,
   setTheme,
   addNotification,
   removeNotification,

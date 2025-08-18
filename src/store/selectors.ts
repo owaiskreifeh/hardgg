@@ -25,6 +25,7 @@ export const selectUIState = (state: RootState) => state.ui;
 export const selectIsModalOpen = (state: RootState) => state.ui.isModalOpen;
 export const selectUILoading = (state: RootState) => state.ui.isLoading;
 export const selectSidebarOpen = (state: RootState) => state.ui.sidebarOpen;
+export const selectMobileMenuOpen = (state: RootState) => state.ui.mobileMenuOpen;
 export const selectTheme = (state: RootState) => state.ui.theme;
 export const selectNotifications = (state: RootState) => state.ui.notifications;
 

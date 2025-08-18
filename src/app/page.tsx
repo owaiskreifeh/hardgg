@@ -3,11 +3,14 @@
 import { useState, useEffect } from 'react';
 import { Header } from '@/components/Header';
 import { SearchBar } from '@/components/SearchBar';
+import { StickySearchBar } from '@/components/StickySearchBar';
 import { GameGrid } from '@/components/GameGrid';
 import { FilterPanel } from '@/components/FilterPanel';
 import { GameModal } from '@/components/GameModal';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { InfiniteScroll } from '@/components/InfiniteScroll';
+import { MobileMenu } from '@/components/MobileMenu';
+import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { useGames } from '@/store/hooks/useGames';
 import { useSearch } from '@/store/hooks/useSearch';
 import { useUI } from '@/store/hooks/useUI';
@@ -38,7 +41,14 @@ export default function HomePage() {
     updateGridSize
   } = useSearch();
 
-  const { isModalOpen, openModal, closeModal } = useUI();
+  const { 
+    isModalOpen, 
+    openModal, 
+    closeModal,
+    mobileMenuOpen,
+    openMobileMenu,
+    closeMobileMenu
+  } = useUI();
 
   const [localModalOpen, setLocalModalOpen] = useState(false);
 
@@ -131,10 +141,17 @@ export default function HomePage() {
     <div className="min-h-screen">
       <Header />
 
+      {/* Sticky Search Bar for Mobile */}
+      <StickySearchBar
+        value={searchState.query}
+        onChange={handleSearchChange}
+        placeholder="Search games..."
+      />
+
       <main className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar */}
-          <aside className="lg:w-80 flex-shrink-0">
+          {/* Sidebar - Hidden on Mobile */}
+          <aside className="hidden lg:block lg:w-80 flex-shrink-0">
             <div className="sticky top-24">
               <SearchBar
                 value={searchState.query}
@@ -179,6 +196,28 @@ export default function HomePage() {
           </div>
         </div>
       </main>
+
+      {/* Floating Action Button for Mobile */}
+      <FloatingActionButton
+        onClick={openMobileMenu}
+        showSearch={false}
+      />
+
+      {/* Mobile Menu */}
+      <MobileMenu
+        isOpen={mobileMenuOpen}
+        onClose={closeMobileMenu}
+        searchValue={searchState.query}
+        onSearchChange={handleSearchChange}
+        filters={searchState.filters}
+        onFilterChange={handleFilterChange}
+        onSortChange={handleSortChange}
+        onGridSizeChange={handleGridSizeChange}
+        gridSize={searchState.gridSize}
+        sortBy={searchState.sortBy}
+        sortOrder={searchState.sortOrder}
+        totalGames={filteredGames.length}
+      />
 
       {/* Game Modal */}
       {localModalOpen && selectedGame && (

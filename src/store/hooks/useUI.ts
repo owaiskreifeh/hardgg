@@ -3,6 +3,7 @@ import {
   setModalOpen,
   setLoading,
   setSidebarOpen,
+  setMobileMenuOpen,
   setTheme,
   addNotification,
   removeNotification,
@@ -13,6 +14,7 @@ import {
   selectIsModalOpen,
   selectUILoading,
   selectSidebarOpen,
+  selectMobileMenuOpen,
   selectTheme,
   selectNotifications
 } from '../selectors';
@@ -24,6 +26,7 @@ export const useUI = () => {
   const isModalOpen = useAppSelector(selectIsModalOpen);
   const isLoading = useAppSelector(selectUILoading);
   const sidebarOpen = useAppSelector(selectSidebarOpen);
+  const mobileMenuOpen = useAppSelector(selectMobileMenuOpen);
   const theme = useAppSelector(selectTheme);
   const notifications = useAppSelector(selectNotifications);
 
@@ -37,6 +40,10 @@ export const useUI = () => {
   const openSidebar = () => dispatch(setSidebarOpen(true));
   const closeSidebar = () => dispatch(setSidebarOpen(false));
   const toggleSidebar = () => dispatch(setSidebarOpen(!sidebarOpen));
+
+  const openMobileMenu = () => dispatch(setMobileMenuOpen(true));
+  const closeMobileMenu = () => dispatch(setMobileMenuOpen(false));
+  const toggleMobileMenu = () => dispatch(setMobileMenuOpen(!mobileMenuOpen));
 
   const switchTheme = (newTheme: 'light' | 'dark') => dispatch(setTheme(newTheme));
   const toggleTheme = () => dispatch(setTheme(theme === 'light' ? 'dark' : 'light'));
@@ -100,6 +107,12 @@ export const useUI = () => {
     openSidebar,
     closeSidebar,
     toggleSidebar,
+
+    // Mobile menu actions
+    mobileMenuOpen,
+    openMobileMenu,
+    closeMobileMenu,
+    toggleMobileMenu,
 
     // Theme actions
     switchTheme,

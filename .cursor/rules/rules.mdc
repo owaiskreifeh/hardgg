@@ -1,0 +1,280 @@
+# Enhanced Cursor Rules for FitGirl Repacks Next.js Gaming Hub
+
+## 🚀 Development Environment
+
+### Running the App
+- **Primary**: Use `docker-compose -f docker-compose.dev.yml up --build` for development
+- **Alternative**: `npm run dev` for local development with Turbopack
+- **Scripts**: Use `.\scripts\dev.ps1` (Windows) or `./scripts/dev.sh` (Linux/macOS)
+- **Restart**: Always restart with build flag when switching between environments
+
+### Development Tools
+- **Turbopack**: Enabled by default for ultra-fast bundling
+- **TypeScript**: Strict mode enabled - fix all type errors
+- **ESLint**: Run `npm run lint:fix` before commits
+- **Prettier**: Use `npm run format` for code formatting
+
+## 🧪 Testing & Debugging
+
+### Browser Testing
+- Use browser tools for UI testing and debugging
+- Test responsive design across different screen sizes
+- Verify PWA features (manifest, service worker)
+- Check Core Web Vitals in browser dev tools
+
+### API Testing
+- Use browser tools for API endpoint testing
+- Test Redis integration and data persistence
+- Verify search and filtering functionality
+- Check error handling and loading states
+
+### Testing Curls
+- Check OS compatibility before running curl commands
+- Use PowerShell for Windows, bash for Linux/macOS
+- Test API endpoints: `/api/games`, `/api/games/[id]`, `/api/health`
+- Verify Redis connection: `/api/games/stats`
+
+## 📦 External Libraries Integration
+
+### Before Adding New Libraries
+1. **Use Context7 tool first** to check documentation and compatibility
+2. **Check bundle size impact** with `npm run build`
+3. **Verify TypeScript support** and type definitions
+4. **Test with existing tech stack** (Next.js 15, Redux Toolkit, Tailwind)
+
+### Library Guidelines
+- Prefer libraries with TypeScript support
+- Check for Next.js 15 compatibility
+- Consider bundle size and performance impact
+- Follow established patterns in the codebase
+
+## 🏗️ Code Architecture & Standards
+
+### Project Structure
+```
+src/
+├── app/                 # Next.js App Router (pages, layouts, API routes)
+├── components/          # Reusable UI components (1 component per file)
+├── lib/                # Utilities, configurations, Redis setup
+├── store/              # Redux Toolkit store, slices, hooks
+├── types/              # TypeScript type definitions
+└── styles/             # Global styles and CSS modules
+```
+
+### Component Guidelines
+- **One component per file** - Always follow this rule
+- **Standalone components** - Make components as independent as possible
+- **Named exports** - Use `export function ComponentName()` not default exports
+- **TypeScript interfaces** - Always define props interfaces
+- **Meaningful names** - Use descriptive names that reveal purpose
+
+### State Management (Redux Toolkit)
+- Use RTK Query for API calls
+- Keep slices focused and small
+- Implement proper error handling
+- Use selectors for derived state
+- Follow established patterns in `store/slices/`
+
+### Code Quality Standards
+- **Function length**: Max 50 lines per function
+- **Parameters**: Max 4 parameters per function
+- **Complexity**: Max cyclomatic complexity of 10
+- **Constants**: Replace magic numbers with named constants
+- **DRY principle**: Extract repeated code into reusable functions
+
+### TypeScript Best Practices
+- Use strict mode (already enabled)
+- Define proper interfaces for all data structures
+- Use path aliases: `@/components/*`, `@/lib/*`, `@/types/*`
+- Avoid `any` type - use proper typing
+- Use utility types when appropriate
+
+## 🎨 Styling & UI
+
+### Tailwind CSS Guidelines
+- Use custom gaming theme colors defined in `tailwind.config.js`
+- Follow responsive design patterns
+- Use utility classes over custom CSS when possible
+- Maintain consistent spacing and typography
+- Use gaming-themed color palette: `#00D4FF` (primary), `#7C3AED` (secondary)
+
+### Component Styling
+- Use `clsx` or `tailwind-merge` for conditional classes
+- Follow established component patterns in existing files
+- Maintain dark gaming theme consistency
+- Use proper loading states and animations
+
+## 🔧 Development Workflow
+
+### Before Committing
+1. Run `npm run lint:fix` to fix ESLint issues
+2. Run `npm run type-check` to verify TypeScript
+3. Run `npm run format` to format code
+4. Test functionality in browser
+5. Verify responsive design
+
+### Code Review Checklist
+- [ ] Follows single responsibility principle
+- [ ] Uses meaningful variable and function names
+- [ ] No magic numbers (use constants)
+- [ ] Proper TypeScript typing
+- [ ] Component is standalone and reusable
+- [ ] Follows established patterns in codebase
+- [ ] No console.log statements (use proper logging)
+- [ ] Proper error handling implemented
+
+### Performance Considerations
+- Use React.memo for expensive components
+- Implement proper memoization with useCallback/useMemo
+- Optimize bundle size with dynamic imports
+- Use Next.js Image component for images
+- Monitor Core Web Vitals
+
+## 🐳 Docker & Deployment
+
+### Development Docker
+- Use `docker-compose.dev.yml` for development
+- Redis included for data persistence
+- Hot reloading enabled with Turbopack
+- Volume mounting for live code changes
+
+### Production Considerations
+- Use `docker-compose.yml` for production
+- Optimize bundle size and performance
+- Implement proper environment variables
+- Test PWA features in production build
+
+## 📱 PWA & Mobile Features
+
+### PWA Guidelines
+- Maintain manifest.json configuration
+- Test service worker functionality
+- Verify offline capabilities
+- Check responsive design on mobile devices
+- Test touch interactions and gestures
+
+### Mobile Optimization
+- Test on various screen sizes
+- Optimize touch targets (min 44px)
+- Ensure proper viewport configuration
+- Test mobile navigation and menus
+
+## 🔍 Search & Filtering
+
+### Search Implementation
+- Use Fuse.js for fuzzy search
+- Implement proper debouncing
+- Test search performance with large datasets
+- Verify search suggestions functionality
+
+### Filtering System
+- Test all filter combinations
+- Verify filter state persistence
+- Test filter performance with large datasets
+- Ensure proper filter reset functionality
+
+## 🎮 Gaming-Specific Features
+
+### Game Data Structure
+- Follow established Game type definition
+- Include all required fields: id, title, description, image, size, genre
+- Implement proper system requirements display
+- Support multiple download link types (magnet, torrent, direct)
+
+### UI/UX for Gaming
+- Use gaming-themed color scheme
+- Implement smooth animations and transitions
+- Provide multiple grid view options (small, medium, large)
+- Ensure proper game card hover effects
+
+## 🚨 Error Handling & Debugging
+
+### Error Handling
+- Implement proper error boundaries
+- Use meaningful error messages
+- Handle API failures gracefully
+- Provide fallback UI for error states
+
+### Debugging Tools
+- Use React DevTools for component debugging
+- Use Redux DevTools for state debugging
+- Monitor console for TypeScript and ESLint errors
+- Use browser network tab for API debugging
+
+## 📚 Documentation & Comments
+
+### Code Documentation
+- Document complex algorithms and business logic
+- Explain why, not what (code should be self-documenting)
+- Use JSDoc for function documentation
+- Keep README.md and DEVELOPMENT.md updated
+
+### API Documentation
+- Document all API endpoints
+- Include request/response examples
+- Document error codes and messages
+- Keep API documentation in sync with implementation
+
+## 🔄 Continuous Integration
+
+### Pre-commit Hooks
+- ESLint checking
+- TypeScript type checking
+- Code formatting verification
+- Basic functionality testing
+
+### Quality Gates
+- All tests must pass
+- No TypeScript errors
+- ESLint score must be 100%
+- Bundle size within acceptable limits
+- Core Web Vitals meet standards
+
+## 🎯 Performance Targets
+
+### Core Web Vitals
+- LCP (Largest Contentful Paint): < 2.5s
+- FID (First Input Delay): < 100ms
+- CLS (Cumulative Layout Shift): < 0.1
+
+### Bundle Optimization
+- Main bundle size: < 500KB
+- Use code splitting for routes
+- Optimize images and assets
+- Minimize third-party dependencies
+
+## 🛡️ Security Considerations
+
+### Data Validation
+- Validate all user inputs
+- Sanitize data before rendering
+- Implement proper CORS policies
+- Use environment variables for sensitive data
+
+### API Security
+- Implement rate limiting
+- Validate API requests
+- Use proper HTTP status codes
+- Handle sensitive data securely
+
+## 📈 Monitoring & Analytics
+
+### Performance Monitoring
+- Monitor Core Web Vitals
+- Track API response times
+- Monitor bundle size changes
+- Track user interaction patterns
+
+### Error Tracking
+- Implement error logging
+- Track JavaScript errors
+- Monitor API failures
+- Track user experience issues
+
+---
+
+**Remember**: This is a gaming hub application. Prioritize user experience, performance, and visual appeal while maintaining clean, maintainable code. Always test on both desktop and mobile devices, and ensure the gaming theme is consistent throughout the application.
+
+## Integrating external libs
+
+use context7 tool first
