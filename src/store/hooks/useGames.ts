@@ -3,20 +3,25 @@ import { useAppDispatch, useAppSelector } from '../hooks';
 import {
   fetchGames,
   fetchGameById,
-  filterGames,
+  loadMoreGames,
   setSelectedGame,
   clearSelectedGame,
-  clearError
+  clearError,
+  resetPagination
 } from '../slices/gamesSlice';
 import {
   selectGames,
   selectFilteredGames,
   selectSelectedGame,
   selectGamesLoading,
+  selectGamesLoadingMore,
   selectGamesError,
   selectLastFetched,
   selectFilteredGamesCount,
-  selectTotalGamesCount
+  selectTotalGamesCount,
+  selectCurrentPage,
+  selectHasMore,
+  selectTotalGames
 } from '../selectors';
 
 export const useGames = () => {
@@ -26,17 +31,36 @@ export const useGames = () => {
   const filteredGames = useAppSelector(selectFilteredGames);
   const selectedGame = useAppSelector(selectSelectedGame);
   const loading = useAppSelector(selectGamesLoading);
+  const loadingMore = useAppSelector(selectGamesLoadingMore);
   const error = useAppSelector(selectGamesError);
   const lastFetched = useAppSelector(selectLastFetched);
   const filteredCount = useAppSelector(selectFilteredGamesCount);
   const totalCount = useAppSelector(selectTotalGamesCount);
+  const currentPage = useAppSelector(selectCurrentPage);
+  const hasMore = useAppSelector(selectHasMore);
+  const totalGames = useAppSelector(selectTotalGames);
 
-  const loadGames = useCallback(() => dispatch(fetchGames()), [dispatch]);
+  const loadGames = useCallback(() => {
+    try {
+      dispatch(fetchGames(1));
+    } catch (error) {
+      console.error('Error loading games:', error);
+    }
+  }, [dispatch]);
+  
+  const loadMore = useCallback(() => {
+    try {
+      dispatch(loadMoreGames());
+    } catch (error) {
+      console.error('Error loading more games:', error);
+    }
+  }, [dispatch]);
+  
   const loadGameById = useCallback((id: string) => dispatch(fetchGameById(id)), [dispatch]);
-  const applyFilters = useCallback(() => dispatch(filterGames()), [dispatch]);
   const selectGame = useCallback((game: any) => dispatch(setSelectedGame(game)), [dispatch]);
   const clearGame = useCallback(() => dispatch(clearSelectedGame()), [dispatch]);
   const clearErrorState = useCallback(() => dispatch(clearError()), [dispatch]);
+  const resetPaginationState = useCallback(() => dispatch(resetPagination()), [dispatch]);
 
   // Check if we need to fetch games (if not loaded or stale)
   const shouldFetchGames = useCallback(() => {
@@ -47,7 +71,12 @@ export const useGames = () => {
   // Auto-fetch games if needed
   useEffect(() => {
     if (shouldFetchGames()) {
-      loadGames();
+      // Add a small delay to ensure store is hydrated
+      const timer = setTimeout(() => {
+        loadGames();
+      }, 100);
+      
+      return () => clearTimeout(timer);
     }
   }, [shouldFetchGames, loadGames]);
 
@@ -57,18 +86,23 @@ export const useGames = () => {
     filteredGames,
     selectedGame,
     loading,
+    loadingMore,
     error,
     lastFetched,
     filteredCount,
     totalCount,
+    currentPage,
+    hasMore,
+    totalGames,
 
     // Actions
     loadGames,
+    loadMore,
     loadGameById,
-    applyFilters,
     selectGame,
     clearGame,
     clearErrorState,
+    resetPaginationState,
 
     // Utilities
     shouldFetchGames

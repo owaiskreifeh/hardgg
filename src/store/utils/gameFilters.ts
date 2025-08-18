@@ -1,4 +1,5 @@
 import { SearchState } from '../slices/searchSlice';
+import { Game } from '@/types/game';
 
 export const filterAndSortGames = (games: Game[], searchState: SearchState): Game[] => {
   let filtered = [...games];

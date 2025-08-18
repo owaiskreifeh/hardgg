@@ -7,8 +7,12 @@ export const selectGames = (state: RootState) => state.games.games;
 export const selectFilteredGames = (state: RootState) => state.games.filteredGames;
 export const selectSelectedGame = (state: RootState) => state.games.selectedGame;
 export const selectGamesLoading = (state: RootState) => state.games.loading;
+export const selectGamesLoadingMore = (state: RootState) => state.games.loadingMore;
 export const selectGamesError = (state: RootState) => state.games.error;
 export const selectLastFetched = (state: RootState) => state.games.lastFetched;
+export const selectCurrentPage = (state: RootState) => state.games.currentPage;
+export const selectHasMore = (state: RootState) => state.games.hasMore;
+export const selectTotalGames = (state: RootState) => state.games.totalGames;
 
 export const selectSearchState = (state: RootState) => state.search;
 export const selectSearchQuery = (state: RootState) => state.search.query;

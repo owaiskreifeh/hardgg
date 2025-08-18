@@ -2,20 +2,146 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Game } from '@/types/game';
 import { filterAndSortGames } from '../utils/gameFilters';
 
-// Async thunk for fetching games
+// Async thunk for fetching games with pagination
 export const fetchGames = createAsyncThunk(
   'games/fetchGames',
-  async (_, { rejectWithValue }) => {
+  async (page: number = 1, { getState, rejectWithValue }) => {
     try {
-      const response = await fetch('/api/games');
+      const state = getState() as any;
+      console.log('Current state:', state); // Debug log
+      
+      // For initial load (page 1), don't depend on search state
+      let searchState = null;
+      if (page > 1) {
+        searchState = state.search || {
+          query: '',
+          filters: {},
+          sortBy: 'title',
+          sortOrder: 'asc'
+        };
+      }
+      
+      console.log('Search state:', searchState); // Debug log
+      
+      // Build query parameters
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: '20'
+      });
+
+      // Only add search parameters if searchState exists
+      if (searchState) {
+        if (searchState.query) {
+          params.append('q', searchState.query);
+        }
+
+        if (searchState.filters?.genre?.length) {
+          params.append('genre', searchState.filters.genre.join(','));
+        }
+
+        if (searchState.filters?.size) {
+          params.append('size', searchState.filters.size);
+        }
+
+        if (searchState.filters?.language?.length) {
+          params.append('language', searchState.filters.language.join(','));
+        }
+
+        if (searchState.sortBy) {
+          params.append('sortBy', searchState.sortBy);
+        }
+
+        if (searchState.sortOrder) {
+          params.append('sortOrder', searchState.sortOrder);
+        }
+      }
+
+      const url = `/api/games?${params.toString()}`;
+      console.log('Fetching URL:', url); // Debug log
+
+      const response = await fetch(url);
       if (!response.ok) {
-        throw new Error('Failed to fetch games');
+        throw new Error(`Failed to fetch games: ${response.status} ${response.statusText}`);
       }
       const data = await response.json();
-      return data.games;
+      return {
+        games: data.games,
+        pagination: data.pagination,
+        isInitialLoad: page === 1
+      };
     } catch (error) {
+      console.error('Error in fetchGames:', error); // Debug log
       return rejectWithValue(
         error instanceof Error ? error.message : 'Failed to load games'
+      );
+    }
+  }
+);
+
+// Async thunk for loading more games
+export const loadMoreGames = createAsyncThunk(
+  'games/loadMoreGames',
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const state = getState() as any;
+      const { currentPage, hasMore } = state.games;
+      const searchState = state.search || {
+        query: '',
+        filters: {},
+        sortBy: 'title',
+        sortOrder: 'asc'
+      };
+      
+      if (!hasMore) {
+        return { games: [], pagination: null, isInitialLoad: false };
+      }
+
+      const nextPage = currentPage + 1;
+      
+      // Build query parameters
+      const params = new URLSearchParams({
+        page: nextPage.toString(),
+        limit: '20'
+      });
+
+      // Add search parameters if they exist
+      if (searchState && searchState.query) {
+        params.append('q', searchState.query);
+      }
+
+      if (searchState && searchState.filters?.genre?.length) {
+        params.append('genre', searchState.filters.genre.join(','));
+      }
+
+      if (searchState && searchState.filters?.size) {
+        params.append('size', searchState.filters.size);
+      }
+
+      if (searchState && searchState.filters?.language?.length) {
+        params.append('language', searchState.filters.language.join(','));
+      }
+
+      if (searchState && searchState.sortBy) {
+        params.append('sortBy', searchState.sortBy);
+      }
+
+      if (searchState && searchState.sortOrder) {
+        params.append('sortOrder', searchState.sortOrder);
+      }
+
+      const response = await fetch(`/api/games?${params.toString()}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch more games');
+      }
+      const data = await response.json();
+      return {
+        games: data.games,
+        pagination: data.pagination,
+        isInitialLoad: false
+      };
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Failed to load more games'
       );
     }
   }
@@ -40,28 +166,17 @@ export const fetchGameById = createAsyncThunk(
   }
 );
 
-// Thunk for filtering games
-export const filterGames = createAsyncThunk(
-  'games/filterGames',
-  async (_, { getState, dispatch }) => {
-    const state = getState() as any;
-    const { games } = state.games;
-    const { searchState } = state.search;
-
-    const filteredGames = filterAndSortGames(games, searchState);
-    dispatch(setFilteredGames(filteredGames));
-
-    return filteredGames;
-  }
-);
-
 interface GamesState {
   games: Game[];
   filteredGames: Game[];
   selectedGame: Game | null;
   loading: boolean;
+  loadingMore: boolean;
   error: string | null;
   lastFetched: number | null;
+  currentPage: number;
+  hasMore: boolean;
+  totalGames: number;
 }
 
 const initialState: GamesState = {
@@ -69,17 +184,18 @@ const initialState: GamesState = {
   filteredGames: [],
   selectedGame: null,
   loading: false,
+  loadingMore: false,
   error: null,
-  lastFetched: null
+  lastFetched: null,
+  currentPage: 1,
+  hasMore: true,
+  totalGames: 0
 };
 
 const gamesSlice = createSlice({
   name: 'games',
   initialState,
   reducers: {
-    setFilteredGames: (state, action: PayloadAction<Game[]>) => {
-      state.filteredGames = action.payload;
-    },
     setSelectedGame: (state, action: PayloadAction<Game | null>) => {
       state.selectedGame = action.payload;
     },
@@ -88,23 +204,68 @@ const gamesSlice = createSlice({
     },
     clearSelectedGame: (state) => {
       state.selectedGame = null;
+    },
+    resetPagination: (state) => {
+      state.currentPage = 1;
+      state.hasMore = true;
+      state.games = [];
+      state.filteredGames = [];
     }
   },
   extraReducers: (builder) => {
     builder
       // Fetch games
-      .addCase(fetchGames.pending, (state) => {
-        state.loading = true;
+      .addCase(fetchGames.pending, (state, action) => {
+        if (action.meta.arg === 1) {
+          state.loading = true;
+        } else {
+          state.loadingMore = true;
+        }
         state.error = null;
       })
       .addCase(fetchGames.fulfilled, (state, action) => {
-        state.loading = false;
-        state.games = action.payload;
-        state.filteredGames = action.payload;
+        const { games, pagination, isInitialLoad } = action.payload;
+        
+        if (isInitialLoad) {
+          state.loading = false;
+          state.games = games;
+          state.filteredGames = games;
+          state.currentPage = pagination.page;
+        } else {
+          state.loadingMore = false;
+          state.games = [...state.games, ...games];
+          state.filteredGames = [...state.filteredGames, ...games];
+          state.currentPage = pagination.page;
+        }
+        
+        state.hasMore = pagination.hasNext;
+        state.totalGames = pagination.total;
         state.lastFetched = Date.now();
       })
       .addCase(fetchGames.rejected, (state, action) => {
         state.loading = false;
+        state.loadingMore = false;
+        state.error = action.payload as string;
+      })
+      // Load more games
+      .addCase(loadMoreGames.pending, (state) => {
+        state.loadingMore = true;
+        state.error = null;
+      })
+      .addCase(loadMoreGames.fulfilled, (state, action) => {
+        const { games, pagination } = action.payload;
+        
+        if (games.length > 0) {
+          state.games = [...state.games, ...games];
+          state.filteredGames = [...state.filteredGames, ...games];
+          state.currentPage = pagination.page;
+          state.hasMore = pagination.hasNext;
+        }
+        
+        state.loadingMore = false;
+      })
+      .addCase(loadMoreGames.rejected, (state, action) => {
+        state.loadingMore = false;
         state.error = action.payload as string;
       })
       // Fetch game by ID
@@ -124,10 +285,10 @@ const gamesSlice = createSlice({
 });
 
 export const {
-  setFilteredGames,
   setSelectedGame,
   clearError,
-  clearSelectedGame
+  clearSelectedGame,
+  resetPagination
 } = gamesSlice.actions;
 
 export default gamesSlice.reducer;

@@ -29,6 +29,9 @@ const searchSlice = createSlice({
     },
     updateFilter: (state, action: PayloadAction<{ key: keyof GameFilter; value: any }>) => {
       const { key, value } = action.payload;
+      if (!state.filters) {
+        state.filters = {};
+      }
       state.filters[key] = value;
     },
     setSortBy: (state, action: PayloadAction<'title' | 'releaseDate' | 'size'>) => {

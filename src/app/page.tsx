@@ -7,7 +7,10 @@ import { GameGrid } from '@/components/GameGrid';
 import { FilterPanel } from '@/components/FilterPanel';
 import { GameModal } from '@/components/GameModal';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
-import { useGameStore } from '@/lib/store';
+import { InfiniteScroll } from '@/components/InfiniteScroll';
+import { useGames } from '@/store/hooks/useGames';
+import { useSearch } from '@/store/hooks/useSearch';
+import { useUI } from '@/store/hooks/useUI';
 import { Game } from '@/types/game';
 
 export default function HomePage() {
@@ -15,49 +18,87 @@ export default function HomePage() {
     games,
     filteredGames,
     loading,
+    loadingMore,
     error,
     selectedGame,
-    searchState,
-    setSelectedGame,
-    setSearchState,
+    hasMore,
+    totalGames,
     loadGames,
-    filterGames
-  } = useGameStore();
+    loadMore,
+    selectGame,
+    clearGame,
+    resetPaginationState
+  } = useGames();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const {
+    searchState,
+    updateSearchQuery,
+    updateSearchFilters,
+    updateSorting,
+    updateGridSize
+  } = useSearch();
+
+  const { isModalOpen, openModal, closeModal } = useUI();
+
+  const [localModalOpen, setLocalModalOpen] = useState(false);
+
+  // Debug logging
+  console.log('HomePage render - searchState:', searchState);
+  console.log('HomePage render - games:', games.length);
+  console.log('HomePage render - loading:', loading);
+  console.log('HomePage render - error:', error);
 
   useEffect(() => {
+    console.log('HomePage - Initial loadGames effect');
     loadGames();
   }, [loadGames]);
 
+  // Reset pagination when search or filters change
   useEffect(() => {
-    filterGames();
-  }, [searchState, filterGames]);
+    if (searchState) {
+      resetPaginationState();
+      loadGames();
+    }
+  }, [searchState?.query, searchState?.filters, searchState?.sortBy, searchState?.sortOrder, resetPaginationState, loadGames]);
 
   const handleGameClick = (game: Game) => {
-    setSelectedGame(game);
-    setIsModalOpen(true);
+    selectGame(game);
+    setLocalModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedGame(null);
+    setLocalModalOpen(false);
+    clearGame();
   };
 
   const handleSearchChange = (query: string) => {
-    setSearchState({ ...searchState, query });
+    if (searchState) {
+      updateSearchQuery(query);
+    }
   };
 
   const handleFilterChange = (filters: any) => {
-    setSearchState({ ...searchState, filters });
+    if (searchState) {
+      updateSearchFilters(filters);
+    }
   };
 
   const handleSortChange = (sortBy: string, sortOrder: 'asc' | 'desc') => {
-    setSearchState({ ...searchState, sortBy: sortBy as any, sortOrder });
+    if (searchState) {
+      updateSorting(sortBy as any, sortOrder);
+    }
   };
 
   const handleGridSizeChange = (gridSize: 'small' | 'medium' | 'large') => {
-    setSearchState({ ...searchState, gridSize });
+    if (searchState) {
+      updateGridSize(gridSize);
+    }
+  };
+
+  const handleLoadMore = () => {
+    if (hasMore && !loadingMore) {
+      loadMore();
+    }
   };
 
   if (error) {
@@ -73,6 +114,15 @@ export default function HomePage() {
             Try Again
           </button>
         </div>
+      </div>
+    );
+  }
+
+  // Show loading if search state is not ready
+  if (!searchState) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner />
       </div>
     );
   }
@@ -107,26 +157,34 @@ export default function HomePage() {
 
           {/* Main Content */}
           <div className="flex-1">
-            {loading ? (
+            {loading && games.length === 0 ? (
               <div className="flex items-center justify-center py-20">
                 <LoadingSpinner />
               </div>
             ) : (
-              <GameGrid
-                games={filteredGames}
-                gridSize={searchState.gridSize}
-                onGameClick={handleGameClick}
-              />
+              <InfiniteScroll
+                onLoadMore={handleLoadMore}
+                hasMore={hasMore}
+                loading={loadingMore}
+                totalLoaded={filteredGames.length}
+                totalAvailable={totalGames}
+              >
+                <GameGrid
+                  games={filteredGames}
+                  gridSize={searchState.gridSize}
+                  onGameClick={handleGameClick}
+                />
+              </InfiniteScroll>
             )}
           </div>
         </div>
       </main>
 
       {/* Game Modal */}
-      {isModalOpen && selectedGame && (
+      {localModalOpen && selectedGame && (
         <GameModal
           game={selectedGame}
-          isOpen={isModalOpen}
+          isOpen={localModalOpen}
           onClose={handleCloseModal}
         />
       )}

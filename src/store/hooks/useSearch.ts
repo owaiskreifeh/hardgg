@@ -11,7 +11,6 @@ import {
   clearFilters,
   resetSearch
 } from '../slices/searchSlice';
-import { filterGames } from '../slices/gamesSlice';
 import {
   selectSearchState,
   selectSearchQuery,
@@ -64,15 +63,6 @@ export const useSearch = () => {
     dispatch(resetSearch());
   };
 
-  const applySearchAndFilters = useCallback(() => {
-    dispatch(filterGames());
-  }, [dispatch]);
-
-  // Auto-apply filters when search state changes
-  useEffect(() => {
-    applySearchAndFilters();
-  }, [searchState, applySearchAndFilters]);
-
   return {
     // State
     searchState,
@@ -91,7 +81,6 @@ export const useSearch = () => {
     updateSorting,
     updateGridSize,
     clearAllFilters,
-    resetAllSearch,
-    applySearchAndFilters
+    resetAllSearch
   };
 };
