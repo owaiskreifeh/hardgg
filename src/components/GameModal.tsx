@@ -83,7 +83,7 @@ export function GameModal({ game, isOpen, onClose }: GameModalProps) {
                   {formatDate(game.releaseDate)}
                 </div>
               </div>
-              
+
               <div className="gaming-card p-3">
                 <div className="flex items-center gap-2 text-sm text-gray-400 mb-1">
                   <HardDrive size={16} />
@@ -93,7 +93,7 @@ export function GameModal({ game, isOpen, onClose }: GameModalProps) {
                   {game.originalSize}
                 </div>
               </div>
-              
+
               <div className="gaming-card p-3">
                 <div className="flex items-center gap-2 text-sm text-gray-400 mb-1">
                   <Users size={16} />
@@ -103,7 +103,7 @@ export function GameModal({ game, isOpen, onClose }: GameModalProps) {
                   {game.developer}
                 </div>
               </div>
-              
+
               <div className="gaming-card p-3">
                 <div className="flex items-center gap-2 text-sm text-gray-400 mb-1">
                   <Globe size={16} />
@@ -136,7 +136,7 @@ export function GameModal({ game, isOpen, onClose }: GameModalProps) {
                   </span>
                 ))}
               </div>
-              
+
               <h3 className="text-lg font-semibold text-white mb-3">Tags</h3>
               <div className="flex flex-wrap gap-2">
                 {game.tags.map((tag) => (

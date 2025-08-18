@@ -11,11 +11,11 @@ interface SearchBarProps {
   className?: string;
 }
 
-export function SearchBar({ 
-  value, 
-  onChange, 
-  placeholder = "Search...",
-  className = "" 
+export function SearchBar({
+  value,
+  onChange,
+  placeholder = 'Search...',
+  className = ''
 }: SearchBarProps) {
   const [localValue, setLocalValue] = useState(value);
 
@@ -40,9 +40,9 @@ export function SearchBar({
   return (
     <div className={`relative ${className}`}>
       <div className="relative">
-        <Search 
-          className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" 
-          size={20} 
+        <Search
+          className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+          size={20}
         />
         <input
           type="text"
@@ -61,7 +61,7 @@ export function SearchBar({
           </button>
         )}
       </div>
-      
+
       {/* Search suggestions could go here */}
       {localValue && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-gaming-card border border-gaming-border rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">

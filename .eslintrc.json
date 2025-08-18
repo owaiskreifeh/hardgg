@@ -1,0 +1,45 @@
+{
+  "extends": [
+    "next",
+    "next/core-web-vitals"
+  ],
+  "rules": {
+    // Clean Code Guidelines
+    "prefer-const": "error",
+    "no-var": "error",
+    "no-magic-numbers": ["warn", { "ignore": [-1, 0, 1, 2] }],
+    
+    // Meaningful Names
+    "id-length": ["warn", { "min": 2, "exceptions": ["i", "j", "k", "x", "y", "z"] }],
+    "camelcase": ["error", { "properties": "never" }],
+    
+    // Single Responsibility
+    "max-lines-per-function": ["warn", { "max": 50, "skipBlankLines": true, "skipComments": true }],
+    "max-params": ["warn", { "max": 4 }],
+    "complexity": ["warn", { "max": 10 }],
+    
+    // DRY Principle
+    "no-duplicate-imports": "error",
+    "no-useless-return": "error",
+    
+    // Clean Structure
+    "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1 }],
+    "no-trailing-spaces": "error",
+    "eol-last": "error",
+    "comma-dangle": ["error", "never"],
+    "semi": ["error", "always"],
+    "quotes": ["error", "single", { "avoidEscape": true }],
+    
+    // React Specific
+    "react-hooks/exhaustive-deps": "warn",
+    "react/no-unescaped-entities": "error",
+    
+    // Code Quality
+    "prefer-template": "error",
+    "object-shorthand": "error",
+    "prefer-destructuring": ["error", { "array": true, "object": true }],
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-debugger": "error",
+    "no-alert": "warn"
+  }
+}

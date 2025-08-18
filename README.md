@@ -18,12 +18,14 @@ A modern, responsive gaming hub built with Next.js 15.x, TypeScript, and Tailwin
 ## 🛠️ Tech Stack
 
 - **Framework**: Next.js 15.x with App Router
+- **Bundler**: Turbopack (Rust-based, ultra-fast development)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS with custom gaming theme
 - **State Management**: Zustand
 - **Search**: Fuse.js for fuzzy search
 - **Icons**: Lucide React
 - **Fonts**: Google Fonts (Inter, Orbitron)
+- **Database**: Redis (for development data storage)
 
 ## 📦 Installation
 
@@ -169,8 +171,45 @@ The application includes PWA features:
 
 ## 🔧 Development
 
-### Available Scripts
-- `npm run dev` - Start development server
+### Docker Development with Turbopack
+
+For the best development experience with hot reloading, use Docker:
+
+#### Quick Start (Windows PowerShell)
+```powershell
+# Run the development script
+.\scripts\dev.ps1
+```
+
+#### Quick Start (Linux/macOS)
+```bash
+# Make the script executable
+chmod +x scripts/dev.sh
+
+# Run the development script
+./scripts/dev.sh
+```
+
+#### Manual Docker Setup
+```bash
+# Start the development environment
+docker-compose -f docker-compose.dev.yml up --build
+
+# Or run in detached mode
+docker-compose -f docker-compose.dev.yml up -d --build
+```
+
+#### Development Features
+- **🚀 Turbopack**: Ultra-fast bundling and hot reloading
+- **🔄 Hot Reloading**: Instant code changes without page refresh
+- **📦 Redis**: In-memory data storage for development
+- **🎯 TypeScript**: Full type safety and IntelliSense
+- **🎨 Tailwind**: Hot reloading for CSS changes
+
+### Local Development
+
+#### Available Scripts
+- `npm run dev` - Start development server with Turbopack
 - `npm run build` - Build for production
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint

@@ -3,8 +3,39 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
+  // Enable Turbopack optimizations
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+    },
+  },
+  output: 'standalone',
   images: {
-    domains: ['picsum.photos'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.imageban.ru',
+      },
+      {
+        protocol: 'http',
+        hostname: '*.imageban.ru',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.fastpic.ru',
+      },
+      {
+        protocol: 'http',
+        hostname: '*.fastpic.ru',
+      },
+    ],
     formats: ['image/webp', 'image/avif'],
   },
   async headers() {

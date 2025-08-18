@@ -21,7 +21,7 @@ export default function HomePage() {
     setSelectedGame,
     setSearchState,
     loadGames,
-    filterGames,
+    filterGames
   } = useGameStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,7 +32,7 @@ export default function HomePage() {
 
   useEffect(() => {
     filterGames();
-  }, [searchState, games, filterGames]);
+  }, [searchState, filterGames]);
 
   const handleGameClick = (game: Game) => {
     setSelectedGame(game);
@@ -80,7 +80,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       <Header />
-      
+
       <main className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
@@ -91,7 +91,7 @@ export default function HomePage() {
                 onChange={handleSearchChange}
                 placeholder="Search games..."
               />
-              
+
               <FilterPanel
                 filters={searchState.filters}
                 onFilterChange={handleFilterChange}

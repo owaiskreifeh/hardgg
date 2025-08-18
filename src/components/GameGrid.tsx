@@ -11,11 +11,11 @@ interface GameGridProps {
   className?: string;
 }
 
-export function GameGrid({ 
-  games, 
-  gridSize, 
-  onGameClick, 
-  className = "" 
+export function GameGrid({
+  games,
+  gridSize,
+  onGameClick,
+  className = ''
 }: GameGridProps) {
   const getGridClasses = () => {
     switch (gridSize) {
@@ -37,7 +37,7 @@ export function GameGrid({
           No games found
         </h3>
         <p className="text-gray-400 max-w-md">
-          Try adjusting your search terms or filters to find what you're looking for.
+          Try adjusting your search terms or filters to find what you&apos;re looking for.
         </p>
       </div>
     );
@@ -45,9 +45,9 @@ export function GameGrid({
 
   return (
     <div className={cn(getGridClasses(), className)}>
-      {games.map((game) => (
+      {games.map((game, index) => (
         <GameCard
-          key={game.id}
+          key={`${game.title}-${index}`}
           game={game}
           size={gridSize}
           onClick={() => onGameClick(game)}

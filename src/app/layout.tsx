@@ -1,17 +1,18 @@
 import type { Metadata } from 'next';
 import { Inter, Orbitron } from 'next/font/google';
 import './globals.css';
+import { StoreProvider } from '@/store/Provider';
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
-  display: 'swap',
+  display: 'swap'
 });
 
-const orbitron = Orbitron({ 
+const orbitron = Orbitron({
   subsets: ['latin'],
   variable: '--font-orbitron',
-  display: 'swap',
+  display: 'swap'
 });
 
 export const metadata: Metadata = {
@@ -26,28 +27,28 @@ export const metadata: Metadata = {
     icon: [
       { url: '/icons/icon-48x48.png', sizes: '48x48', type: 'image/png' },
       { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/icons/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+      { url: '/icons/icon-512x512.png', sizes: '512x512', type: 'image/png' }
     ],
     apple: [
-      { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
-    ],
+      { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' }
+    ]
   },
   openGraph: {
     title: 'FitGirl Repacks - Modern Gaming Hub',
     description: 'Browse and search through a collection of repacked games with advanced filtering and search capabilities.',
     type: 'website',
-    images: ['/screenshot1.png'],
+    images: ['/screenshot1.png']
   },
   twitter: {
     card: 'summary_large_image',
     title: 'FitGirl Repacks - Modern Gaming Hub',
     description: 'Browse and search through a collection of repacked games with advanced filtering and search capabilities.',
-    images: ['/screenshot1.png'],
-  },
+    images: ['/screenshot1.png']
+  }
 };
 
 export default function RootLayout({
-  children,
+  children
 }: {
   children: React.ReactNode;
 }) {
@@ -63,14 +64,16 @@ export default function RootLayout({
                 t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
                 y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
               })(window, document, "clarity", "script", "py2etcr18e");
-            `,
+            `
           }}
         />
       </head>
       <body className={`${inter.className} bg-gaming-bg text-white antialiased`}>
-        <div className="gaming-bg min-h-screen">
-          {children}
-        </div>
+        <StoreProvider>
+          <div className="gaming-bg min-h-screen">
+            {children}
+          </div>
+        </StoreProvider>
       </body>
     </html>
   );

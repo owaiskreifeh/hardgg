@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { 
-  Filter, 
-  Grid3X3, 
-  Grid, 
-  List, 
-  ChevronDown, 
+import {
+  Filter,
+  Grid3X3,
+  Grid,
+  List,
+  ChevronDown,
   ChevronUp,
   X,
   RotateCcw
@@ -40,13 +40,13 @@ export function FilterPanel({
   sortBy,
   sortOrder,
   totalGames,
-  className = ""
+  className = ''
 }: FilterPanelProps) {
   const [expandedSections, setExpandedSections] = useState<string[]>(['sort', 'grid']);
 
   const toggleSection = (section: string) => {
-    setExpandedSections(prev => 
-      prev.includes(section) 
+    setExpandedSections(prev =>
+      prev.includes(section)
         ? prev.filter(s => s !== section)
         : [...prev, section]
     );
@@ -60,7 +60,7 @@ export function FilterPanel({
     onFilterChange({});
   };
 
-  const hasActiveFilters = Object.values(filters).some(value => 
+  const hasActiveFilters = Object.values(filters).some(value =>
     Array.isArray(value) ? value.length > 0 : Boolean(value)
   );
 
@@ -119,8 +119,8 @@ export function FilterPanel({
                   onClick={() => onSortChange(sortBy, 'asc')}
                   className={cn(
                     'flex-1 py-2 px-3 rounded text-sm transition-colors duration-200',
-                    sortOrder === 'asc' 
-                      ? 'bg-gaming-primary text-white' 
+                    sortOrder === 'asc'
+                      ? 'bg-gaming-primary text-white'
                       : 'bg-gaming-card border border-gaming-border text-gray-300 hover:bg-gaming-border'
                   )}
                 >
@@ -130,8 +130,8 @@ export function FilterPanel({
                   onClick={() => onSortChange(sortBy, 'desc')}
                   className={cn(
                     'flex-1 py-2 px-3 rounded text-sm transition-colors duration-200',
-                    sortOrder === 'desc' 
-                      ? 'bg-gaming-primary text-white' 
+                    sortOrder === 'desc'
+                      ? 'bg-gaming-primary text-white'
                       : 'bg-gaming-card border border-gaming-border text-gray-300 hover:bg-gaming-border'
                   )}
                 >
@@ -165,8 +165,8 @@ export function FilterPanel({
                   onClick={() => onGridSizeChange('small')}
                   className={cn(
                     'flex-1 py-2 px-3 rounded text-sm transition-colors duration-200 flex items-center justify-center gap-1',
-                    gridSize === 'small' 
-                      ? 'bg-gaming-primary text-white' 
+                    gridSize === 'small'
+                      ? 'bg-gaming-primary text-white'
                       : 'bg-gaming-card border border-gaming-border text-gray-300 hover:bg-gaming-border'
                   )}
                 >
@@ -177,8 +177,8 @@ export function FilterPanel({
                   onClick={() => onGridSizeChange('medium')}
                   className={cn(
                     'flex-1 py-2 px-3 rounded text-sm transition-colors duration-200 flex items-center justify-center gap-1',
-                    gridSize === 'medium' 
-                      ? 'bg-gaming-primary text-white' 
+                    gridSize === 'medium'
+                      ? 'bg-gaming-primary text-white'
                       : 'bg-gaming-card border border-gaming-border text-gray-300 hover:bg-gaming-border'
                   )}
                 >
@@ -189,8 +189,8 @@ export function FilterPanel({
                   onClick={() => onGridSizeChange('large')}
                   className={cn(
                     'flex-1 py-2 px-3 rounded text-sm transition-colors duration-200 flex items-center justify-center gap-1',
-                    gridSize === 'large' 
-                      ? 'bg-gaming-primary text-white' 
+                    gridSize === 'large'
+                      ? 'bg-gaming-primary text-white'
                       : 'bg-gaming-card border border-gaming-border text-gray-300 hover:bg-gaming-border'
                   )}
                 >

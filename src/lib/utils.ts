@@ -7,22 +7,22 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatFileSize(bytes: number): string {
   if (bytes === 0) return '0 Bytes';
-  
+
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))  } ${  sizes[i]}`;
 }
 
 export function parseFileSize(sizeString: string): number {
   const size = sizeString.toLowerCase();
   const number = parseFloat(size.replace(/[^\d.]/g, ''));
-  
+
   if (size.includes('gb')) return number * 1024 * 1024 * 1024;
   if (size.includes('mb')) return number * 1024 * 1024;
   if (size.includes('kb')) return number * 1024;
-  
+
   return number;
 }
 
@@ -31,7 +31,7 @@ export function debounce<T extends (...args: any[]) => any>(
   wait: number
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout;
-  
+
   return (...args: Parameters<T>) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => func(...args), wait);
@@ -43,7 +43,7 @@ export function throttle<T extends (...args: any[]) => any>(
   limit: number
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
-  
+
   return (...args: Parameters<T>) => {
     if (!inThrottle) {
       func(...args);
@@ -59,7 +59,7 @@ export function generateId(): string {
 
 export function truncateText(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
-  return text.substr(0, maxLength) + '...';
+  return `${text.substr(0, maxLength)  }...`;
 }
 
 export function isValidUrl(string: string): boolean {
@@ -85,7 +85,7 @@ export function formatDate(dateString: string): string {
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
-    day: 'numeric',
+    day: 'numeric'
   });
 }
 

@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { Game } from '@/types/game';
-import { formatDate, truncateText } from '@/lib/utils';
-import { cn } from '@/lib/utils';
+import { formatDate, truncateText, cn } from '@/lib/utils';
 
 interface GameCardProps {
   game: Game;
@@ -13,17 +12,17 @@ interface GameCardProps {
   className?: string;
 }
 
-export function GameCard({ 
-  game, 
-  size, 
-  onClick, 
-  className = "" 
+export function GameCard({
+  game,
+  size,
+  onClick,
+  className = ''
 }: GameCardProps) {
   const [imageError, setImageError] = useState(false);
 
   const getCardClasses = () => {
     const baseClasses = 'gaming-card cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl';
-    
+
     switch (size) {
       case 'small':
         return cn(baseClasses, 'p-2', className);
@@ -105,7 +104,7 @@ export function GameCard({
             <span className="text-4xl">🎮</span>
           </div>
         )}
-        
+
         {/* Size Badge */}
         <div className="absolute top-2 right-2">
           <span className="gaming-badge text-xs px-2 py-1">
@@ -119,7 +118,7 @@ export function GameCard({
         <h3 className={getTitleClasses()}>
           {size === 'small' ? truncateText(game.title, 20) : game.title}
         </h3>
-        
+
         {size !== 'small' && (
           <p className={getDescriptionClasses()}>
             {truncateText(game.description, size === 'large' ? 150 : 80)}
@@ -152,10 +151,10 @@ export function GameCard({
               <span>Repack: {game.repackSize}</span>
             </div>
             <div className="w-full bg-gaming-border rounded-full h-1 mt-1">
-              <div 
+              <div
                 className="bg-gaming-primary h-1 rounded-full"
-                style={{ 
-                  width: `${(parseInt(game.repackSize) / parseInt(game.originalSize)) * 100}%` 
+                style={{
+                  width: `${(parseInt(game.repackSize) / parseInt(game.originalSize)) * 100}%`
                 }}
               />
             </div>
