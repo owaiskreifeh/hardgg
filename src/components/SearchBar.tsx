@@ -21,29 +21,54 @@ export function SearchBar({
 }: SearchBarProps) {
   const [localValue, setLocalValue] = useState(value);
 
+  // Debug logging for renders
+  console.log('🔍 SearchBar render:', {
+    propValue: value,
+    localValue,
+    loading,
+    timestamp: new Date().toISOString()
+  });
+
   // Memoized debounced function to prevent recreation on every render
   const debouncedOnChange = useMemo(
-    () => debounce(onChange, 300),
+    () => debounce((newValue: string) => {
+      console.log('🚀 SearchBar debounced onChange called:', newValue);
+      onChange(newValue);
+    }, 800), // Increased debounce time to 800ms to prevent rapid API calls
     [onChange]
   );
 
-  // Update local value when prop changes
+  // Update local value when prop changes, but only if they're different
   useEffect(() => {
-    setLocalValue(value);
-  }, [value]);
+    if (value !== localValue) {
+      console.log('🔄 SearchBar useEffect - prop value changed:', {
+        from: localValue,
+        to: value,
+        timestamp: new Date().toISOString()
+      });
+      setLocalValue(value);
+    }
+  }, [value]); // Remove localValue from dependencies to prevent loops
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
+    console.log('📝 SearchBar handleInputChange:', {
+      from: localValue,
+      to: newValue,
+      timestamp: new Date().toISOString()
+    });
     setLocalValue(newValue);
     debouncedOnChange(newValue);
-  }, [debouncedOnChange]);
+  }, [debouncedOnChange, localValue]);
 
   const handleClear = useCallback(() => {
+    console.log('❌ SearchBar handleClear called');
     setLocalValue('');
     onChange('');
   }, [onChange]);
 
   const handleSuggestionClick = useCallback((suggestion: string) => {
+    console.log('💡 SearchBar handleSuggestionClick:', suggestion);
     setLocalValue(suggestion);
     onChange(suggestion);
   }, [onChange]);

@@ -128,23 +128,31 @@ export function GameModal({ game, isOpen, onClose }: GameModalProps) {
 
             {/* Genres and Tags */}
             <div className="mb-6">
-              <h3 className="text-lg font-semibold text-white mb-3">Genres</h3>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {game.genre.map((genre) => (
-                  <span key={genre} className="gaming-tag">
-                    {genre}
-                  </span>
-                ))}
-              </div>
+              {game.genre.length > 0 && (
+                <>
+                  <h3 className="text-lg font-semibold text-white mb-3">Genres</h3>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {game.genre.map((genre) => (
+                      <span key={genre} className="gaming-tag">
+                        {genre}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
 
-              <h3 className="text-lg font-semibold text-white mb-3">Tags</h3>
-              <div className="flex flex-wrap gap-2">
-                {game.tags.map((tag) => (
-                  <span key={tag} className="gaming-badge">
-                    {tag}
-                  </span>
-                ))}
-              </div>
+              {game.tags.length > 0 && (
+                <>
+                  <h3 className="text-lg font-semibold text-white mb-3">Tags</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {game.tags.map((tag) => (
+                      <span key={tag} className="gaming-badge">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Languages */}
@@ -159,20 +167,6 @@ export function GameModal({ game, isOpen, onClose }: GameModalProps) {
               </div>
             </div>
 
-            {/* Features */}
-            {game.features.length > 0 && (
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-white mb-3">Features</h3>
-                <ul className="space-y-1">
-                  {game.features.map((feature) => (
-                    <li key={feature} className="text-gray-300 flex items-center gap-2">
-                      <span className="w-2 h-2 bg-gaming-primary rounded-full"></span>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
           </div>
         </div>
 
@@ -256,7 +250,20 @@ export function GameModal({ game, isOpen, onClose }: GameModalProps) {
         {game.notes && (
           <div className="mt-6 p-4 bg-yellow-900/20 border border-yellow-500/30 rounded-lg">
             <h4 className="text-md font-semibold text-yellow-400 mb-2">Important Notes</h4>
-            <p className="text-yellow-200 text-sm">{game.notes}</p>
+            <div className="text-yellow-200 text-sm">
+              {game.notes.includes('\n• ') ? (
+                <ul className="space-y-1">
+                  {game.notes.split('\n• ').map((note, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <span className="text-yellow-400 mt-1">•</span>
+                      <span>{note}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>{game.notes}</p>
+              )}
+            </div>
           </div>
         )}
       </div>

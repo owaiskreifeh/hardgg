@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { gameOperations } from '@/lib/redis';
+import { parseSizeToMB } from '@/lib/utils';
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,14 +23,45 @@ export async function GET(request: NextRequest) {
       games = await gameOperations.getAllGames();
     }
 
-    // Apply filters
+    // Apply filters to the current games array (not to all games)
     const filters: any = {};
     if (genre) filters.genre = genre.split(',');
     if (size) filters.size = size;
     if (language) filters.language = language.split(',');
 
     if (Object.keys(filters).length > 0) {
-      games = await gameOperations.filterGames(filters);
+      // Filter the current games array instead of calling filterGames which starts fresh
+      games = games.filter((game: any) => {
+        // Genre filter
+        if (filters.genre?.length) {
+          const gameGenres = game.tags || [];
+          if (!filters.genre.some((g: string) => gameGenres.includes(g))) {
+            return false;
+          }
+        }
+
+        // Size filter
+        if (filters.size) {
+          const gameSize = game.metadata?.repackSize;
+          if (gameSize) {
+            const gameSizeNum = parseSizeToMB(gameSize);
+            const filterSizeNum = parseSizeToMB(filters.size);
+            if (gameSizeNum > filterSizeNum) {
+              return false;
+            }
+          }
+        }
+
+        // Language filter
+        if (filters.language?.length) {
+          const gameLanguages = game.metadata?.languages || '';
+          if (!filters.language.some((lang: string) => gameLanguages.includes(lang))) {
+            return false;
+          }
+        }
+
+        return true;
+      });
     }
 
     // Apply sorting
@@ -46,8 +78,8 @@ export async function GET(request: NextRequest) {
           bValue = new Date(b.releaseDate);
           break;
         case 'size':
-          aValue = parseFloat(a.size.replace(' GB', ''));
-          bValue = parseFloat(b.size.replace(' GB', ''));
+          aValue = parseSizeToMB(a.size);
+          bValue = parseSizeToMB(b.size);
           break;
         default:
           aValue = a.title.toLowerCase();

@@ -1,5 +1,6 @@
 import { SearchState } from '../slices/searchSlice';
 import { Game } from '@/types/game';
+import { parseSizeToMB } from '@/lib/utils';
 
 export const filterAndSortGames = (games: Game[], searchState: SearchState): Game[] => {
   let filtered = [...games];
@@ -27,8 +28,8 @@ export const filterAndSortGames = (games: Game[], searchState: SearchState): Gam
   // Apply size filter
   if (searchState.filters.size) {
     filtered = filtered.filter(game => {
-      const gameSize = parseFloat(game.size.replace(' GB', '').replace(' MB', ''));
-      const filterSize = parseFloat(searchState.filters.size!.replace(' GB', '').replace(' MB', ''));
+      const gameSize = parseSizeToMB(game.size);
+      const filterSize = parseSizeToMB(searchState.filters.size!);
       return gameSize <= filterSize;
     });
   }
@@ -56,8 +57,8 @@ export const filterAndSortGames = (games: Game[], searchState: SearchState): Gam
         bValue = new Date(b.releaseDate);
         break;
       case 'size':
-        aValue = parseFloat(a.size.replace(' GB', '').replace(' MB', ''));
-        bValue = parseFloat(b.size.replace(' GB', '').replace(' MB', ''));
+        aValue = parseSizeToMB(a.size);
+        bValue = parseSizeToMB(b.size);
         break;
       default:
         aValue = a.title.toLowerCase();
@@ -94,8 +95,8 @@ export const getUniqueLanguages = (games: Game[]): string[] => {
 export const getSizeRanges = (games: Game[]): string[] => {
   const sizes = games.map(game => game.size);
   const uniqueSizes = [...new Set(sizes)].sort((a, b) => {
-    const aSize = parseFloat(a.replace(' GB', '').replace(' MB', ''));
-    const bSize = parseFloat(b.replace(' GB', '').replace(' MB', ''));
+    const aSize = parseSizeToMB(a);
+    const bSize = parseSizeToMB(b);
     return aSize - bSize;
   });
   return uniqueSizes;

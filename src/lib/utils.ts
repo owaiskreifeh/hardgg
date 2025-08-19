@@ -26,6 +26,17 @@ export function parseFileSize(sizeString: string): number {
   return number;
 }
 
+export function parseSizeToMB(sizeString: string): number {
+  const size = sizeString.toLowerCase();
+  const number = parseFloat(size.replace(/[^\d.]/g, ''));
+
+  if (size.includes('gb')) return number * 1024;
+  if (size.includes('mb')) return number;
+  if (size.includes('kb')) return number / 1024;
+
+  return number;
+}
+
 export function debounce<T extends (...args: any[]) => any>(
   func: T,
   wait: number

@@ -40,6 +40,21 @@ export const useGames = () => {
   const hasMore = useAppSelector(selectHasMore);
   const totalGames = useAppSelector(selectTotalGames);
 
+  console.log('🔍 Games state:', {
+    games,
+    filteredGames,
+    selectedGame,
+    loading,
+    loadingMore,
+    error,
+    lastFetched,
+    filteredCount,
+    totalCount,
+    currentPage,
+    hasMore,
+    totalGames
+  });
+
   const loadGames = useCallback(() => {
     try {
       dispatch(fetchGames(1));
@@ -68,17 +83,8 @@ export const useGames = () => {
     return !games.length || !lastFetched || (Date.now() - lastFetched > CACHE_DURATION);
   }, [games.length, lastFetched]);
 
-  // Auto-fetch games if needed
-  useEffect(() => {
-    if (shouldFetchGames()) {
-      // Add a small delay to ensure store is hydrated
-      const timer = setTimeout(() => {
-        loadGames();
-      }, 100);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [shouldFetchGames, loadGames]);
+  // Removed auto-fetch effect to prevent duplicate API calls
+  // The main component now handles all game loading logic
 
   return {
     // State

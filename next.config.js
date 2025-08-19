@@ -2,6 +2,15 @@
 const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react'],
+    // Enable better file watching for Docker development
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
   },
   // Enable Turbopack optimizations
   turbopack: {
@@ -13,6 +22,17 @@ const nextConfig = {
     },
   },
   output: 'standalone',
+  // Improve file watching for Docker development
+  webpack: (config, { dev, isServer }) => {
+    if (dev && !isServer) {
+      config.watchOptions = {
+        poll: 1000,
+        aggregateTimeout: 300,
+        ignored: ['**/node_modules', '**/.git', '**/.next', '**/.turbo'],
+      };
+    }
+    return config;
+  },
   images: {
     remotePatterns: [
       {

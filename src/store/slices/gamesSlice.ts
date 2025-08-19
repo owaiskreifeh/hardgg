@@ -8,7 +8,16 @@ export const fetchGames = createAsyncThunk(
   async (page: number = 1, { getState, rejectWithValue }) => {
     try {
       const state = getState() as any;
-      console.log('Current state:', state); // Debug log
+      console.log('🎮 GamesSlice fetchGames called:', {
+        page,
+        timestamp: new Date().toISOString(),
+        searchState: state.search ? {
+          query: state.search.query,
+          filters: state.search.filters,
+          sortBy: state.search.sortBy,
+          sortOrder: state.search.sortOrder
+        } : null
+      });
       
       // Always read current search state so page 1 requests include query/filters
       const searchState = state.search || {
@@ -18,7 +27,7 @@ export const fetchGames = createAsyncThunk(
         sortOrder: 'asc'
       };
       
-      console.log('Search state:', searchState); // Debug log
+      console.log('🎮 GamesSlice searchState for fetch:', searchState);
       
       // Build query parameters
       const params = new URLSearchParams({
@@ -52,20 +61,28 @@ export const fetchGames = createAsyncThunk(
       }
 
       const url = `/api/games?${params.toString()}`;
-      console.log('Fetching URL:', url); // Debug log
+      console.log('🎮 GamesSlice fetching URL:', url);
 
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`Failed to fetch games: ${response.status} ${response.statusText}`);
       }
       const data = await response.json();
+      
+      console.log('🎮 GamesSlice fetchGames success:', {
+        gamesCount: data.games?.length || 0,
+        pagination: data.pagination,
+        isInitialLoad: page === 1,
+        timestamp: new Date().toISOString()
+      });
+      
       return {
         games: data.games,
         pagination: data.pagination,
         isInitialLoad: page === 1
       };
     } catch (error) {
-      console.error('Error in fetchGames:', error); // Debug log
+      console.error('🎮 GamesSlice fetchGames error:', error);
       return rejectWithValue(
         error instanceof Error ? error.message : 'Failed to load games'
       );
@@ -192,15 +209,36 @@ const gamesSlice = createSlice({
   initialState,
   reducers: {
     setSelectedGame: (state, action: PayloadAction<Game | null>) => {
+      console.log('🎮 GamesSlice setSelectedGame:', {
+        from: state.selectedGame?.id,
+        to: action.payload?.id,
+        timestamp: new Date().toISOString()
+      });
       state.selectedGame = action.payload;
     },
     clearError: (state) => {
+      console.log('🎮 GamesSlice clearError:', {
+        from: state.error,
+        timestamp: new Date().toISOString()
+      });
       state.error = null;
     },
     clearSelectedGame: (state) => {
+      console.log('🎮 GamesSlice clearSelectedGame:', {
+        from: state.selectedGame?.id,
+        timestamp: new Date().toISOString()
+      });
       state.selectedGame = null;
     },
     resetPagination: (state) => {
+      console.log('🎮 GamesSlice resetPagination:', {
+        from: {
+          currentPage: state.currentPage,
+          gamesCount: state.games.length,
+          filteredGamesCount: state.filteredGames.length
+        },
+        timestamp: new Date().toISOString()
+      });
       state.currentPage = 1;
       state.hasMore = true;
       state.games = [];
@@ -211,6 +249,11 @@ const gamesSlice = createSlice({
     builder
       // Fetch games
       .addCase(fetchGames.pending, (state, action) => {
+        console.log('🎮 GamesSlice fetchGames.pending:', {
+          page: action.meta.arg,
+          isInitialLoad: action.meta.arg === 1,
+          timestamp: new Date().toISOString()
+        });
         if (action.meta.arg === 1) {
           state.loading = true;
         } else {
@@ -220,6 +263,14 @@ const gamesSlice = createSlice({
       })
       .addCase(fetchGames.fulfilled, (state, action) => {
         const { games, pagination, isInitialLoad } = action.payload;
+        
+        console.log('🎮 GamesSlice fetchGames.fulfilled:', {
+          gamesCount: games.length,
+          isInitialLoad,
+          pagination,
+          previousGamesCount: state.games.length,
+          timestamp: new Date().toISOString()
+        });
         
         if (isInitialLoad) {
           state.loading = false;
@@ -238,17 +289,31 @@ const gamesSlice = createSlice({
         state.lastFetched = Date.now();
       })
       .addCase(fetchGames.rejected, (state, action) => {
+        console.log('🎮 GamesSlice fetchGames.rejected:', {
+          error: action.payload,
+          timestamp: new Date().toISOString()
+        });
         state.loading = false;
         state.loadingMore = false;
         state.error = action.payload as string;
       })
       // Load more games
       .addCase(loadMoreGames.pending, (state) => {
+        console.log('🎮 GamesSlice loadMoreGames.pending:', {
+          timestamp: new Date().toISOString()
+        });
         state.loadingMore = true;
         state.error = null;
       })
       .addCase(loadMoreGames.fulfilled, (state, action) => {
         const { games, pagination } = action.payload;
+        
+        console.log('🎮 GamesSlice loadMoreGames.fulfilled:', {
+          gamesCount: games.length,
+          pagination,
+          previousGamesCount: state.games.length,
+          timestamp: new Date().toISOString()
+        });
         
         if (games.length > 0) {
           state.games = [...state.games, ...games];
@@ -260,19 +325,34 @@ const gamesSlice = createSlice({
         state.loadingMore = false;
       })
       .addCase(loadMoreGames.rejected, (state, action) => {
+        console.log('🎮 GamesSlice loadMoreGames.rejected:', {
+          error: action.payload,
+          timestamp: new Date().toISOString()
+        });
         state.loadingMore = false;
         state.error = action.payload as string;
       })
       // Fetch game by ID
       .addCase(fetchGameById.pending, (state) => {
+        console.log('🎮 GamesSlice fetchGameById.pending:', {
+          timestamp: new Date().toISOString()
+        });
         state.loading = true;
         state.error = null;
       })
       .addCase(fetchGameById.fulfilled, (state, action) => {
+        console.log('🎮 GamesSlice fetchGameById.fulfilled:', {
+          gameId: action.payload?.id,
+          timestamp: new Date().toISOString()
+        });
         state.loading = false;
         state.selectedGame = action.payload;
       })
       .addCase(fetchGameById.rejected, (state, action) => {
+        console.log('🎮 GamesSlice fetchGameById.rejected:', {
+          error: action.payload,
+          timestamp: new Date().toISOString()
+        });
         state.loading = false;
         state.error = action.payload as string;
       });

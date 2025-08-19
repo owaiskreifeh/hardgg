@@ -28,4 +28,15 @@ export function preloadImage(src) {
         img.onerror = reject;
         img.src = src;
     });
+}
+
+export function parseSizeToMB(sizeString) {
+    const size = sizeString.toLowerCase();
+    const number = parseFloat(size.replace(/[^\d.]/g, ''));
+
+    if (size.includes('gb')) return number * 1024;
+    if (size.includes('mb')) return number;
+    if (size.includes('kb')) return number / 1024;
+
+    return number;
 } 

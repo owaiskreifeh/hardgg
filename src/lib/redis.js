@@ -14,6 +14,18 @@ redisClient.on('connect', () => {
   console.log('Connected to Redis');
 });
 
+// Helper function to parse size to MB
+function parseSizeToMB(sizeString) {
+  const size = sizeString.toLowerCase();
+  const number = parseFloat(size.replace(/[^\d.]/g, ''));
+
+  if (size.includes('gb')) return number * 1024;
+  if (size.includes('mb')) return number;
+  if (size.includes('kb')) return number / 1024;
+
+  return number;
+}
+
 // Connect to Redis
 async function connectRedis() {
   if (!redisClient.isOpen) {
@@ -103,8 +115,8 @@ const gameOperations = {
       if (filters.size) {
         const gameSize = game.metadata?.repackSize;
         if (gameSize) {
-          const gameSizeNum = parseFloat(gameSize.replace(' GB', ''));
-          const filterSizeNum = parseFloat(filters.size.replace(' GB', ''));
+          const gameSizeNum = parseSizeToMB(gameSize);
+          const filterSizeNum = parseSizeToMB(filters.size);
           if (gameSizeNum > filterSizeNum) {
             return false;
           }

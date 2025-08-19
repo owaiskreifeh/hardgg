@@ -29,14 +29,43 @@ async function loadDataToRedis() {
 
       // Transform the data to match our Game interface
       const transformedGames = games.map(game => {
+        // Extract genres from tags - genres are typically broader categories
+        const genreKeywords = ['Action', 'RPG', 'Strategy', 'Adventure', 'Shooter', 'Racing', 'Sports', 'Puzzle', 'Simulation', 'Horror', 'Sci-Fi', 'Fantasy', 'Open World', 'Multiplayer', 'Indie', 'Platformer', 'Fighting', 'Stealth', 'Survival', 'Roguelike', 'Metroidvania', 'Visual Novel', 'Point & Click', 'Turn-based', 'Real-time'];
+        
+        const genres = (game.tags || []).filter(tag => 
+          genreKeywords.some(keyword => 
+            tag.toLowerCase().includes(keyword.toLowerCase())
+          )
+        );
+        
+        // Tags are all the original tags, excluding the ones used as genres
+        const tags = (game.tags || []).filter(tag => 
+          !genres.includes(tag)
+        );
+        
+        // Extract a cleaner description by removing metadata info
+        const cleanDescription = game.description
+          .replace(/Genres\/Tags:.*?(?=\s*Companies:|$)/gi, '')
+          .replace(/Companies:.*?(?=\s*Languages:|$)/gi, '')
+          .replace(/Languages:.*?(?=\s*Original Size:|$)/gi, '')
+          .replace(/Original Size:.*?(?=\s*Repack Size:|$)/gi, '')
+          .replace(/Repack Size:.*?(?=\s*Download|$)/gi, '')
+          .replace(/Download.*$/gi, '')
+          .trim();
+        
+        // Create notes from repack features if available
+        const notes = game.repackFeatures && game.repackFeatures.length > 0 
+          ? game.repackFeatures.join('\n• ')
+          : undefined;
+
         const transformedGame = {
           id: gameId.toString(),
           title: game.title,
-          description: game.description,
+          description: cleanDescription || game.description,
           image: game.image,
           size: game.metadata?.originalSize || 'Unknown',
-          genre: game.tags || [],
-          tags: game.tags || [],
+          genre: genres.length > 0 ? genres : (game.tags || []).slice(0, 3), // Fallback to first 3 tags if no genres found
+          tags: tags.length > 0 ? tags : (game.tags || []).slice(3), // Remaining tags
           releaseDate: new Date().toISOString().split('T')[0], // Default date since not in data
           developer: game.metadata?.companies?.split(',')[0]?.trim() || 'Unknown',
           publisher: game.metadata?.companies?.split(',')[1]?.trim() || game.metadata?.companies || 'Unknown',
@@ -56,7 +85,7 @@ async function loadDataToRedis() {
             },
           },
           features: game.repackFeatures || [],
-          notes: game.description,
+          notes: notes,
           url: game.url,
         };
         gameId++;

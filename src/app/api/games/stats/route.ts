@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { gameOperations } from '@/lib/redis';
+import { parseSizeToMB } from '@/lib/utils';
 
 export async function GET(request: NextRequest) {
   try {
@@ -36,15 +37,15 @@ export async function GET(request: NextRequest) {
 
       // Calculate size statistics
       if (game.size && game.size !== 'Unknown') {
-        const sizeNum = parseFloat(game.size.replace(' GB', ''));
+        const sizeNum = parseSizeToMB(game.size);
         if (!isNaN(sizeNum)) {
           totalSize += sizeNum;
           sizeCount++;
 
-          if (sizeNum <= 1) stats.sizeRanges['0-1 GB']++;
-          else if (sizeNum <= 5) stats.sizeRanges['1-5 GB']++;
-          else if (sizeNum <= 10) stats.sizeRanges['5-10 GB']++;
-          else if (sizeNum <= 20) stats.sizeRanges['10-20 GB']++;
+          if (sizeNum <= 1024) stats.sizeRanges['0-1 GB']++;
+          else if (sizeNum <= 5120) stats.sizeRanges['1-5 GB']++;
+          else if (sizeNum <= 10240) stats.sizeRanges['5-10 GB']++;
+          else if (sizeNum <= 20480) stats.sizeRanges['10-20 GB']++;
           else stats.sizeRanges['20+ GB']++;
         }
       }

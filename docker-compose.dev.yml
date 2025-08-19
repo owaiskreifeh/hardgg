@@ -12,15 +12,21 @@ services:
       - REDIS_URL=redis://redis:6379
       - WATCHPACK_POLLING=true
       - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=1000
+      - WATCHPACK_POLLING_INTERVAL=1000
+      - NEXT_TELEMETRY_DISABLED=1
     volumes:
-      - .:/app
+      - .:/app:cached
       - /app/node_modules
       - /app/.next
+      - /app/.turbo
     depends_on:
       - redis
     restart: unless-stopped
     networks:
       - app-network
+    stdin_open: true
+    tty: true
 
   redis:
     image: redis:7-alpine
@@ -43,7 +49,7 @@ services:
       - redis
     command: ["node", "scripts/load-data.mjs"]
     volumes:
-      - .:/app
+      - .:/app:cached
       - /app/node_modules
       - ./results:/app/results:ro
     networks:

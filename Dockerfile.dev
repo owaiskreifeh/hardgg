@@ -15,8 +15,11 @@ RUN npm install
 # Copy source code
 COPY . .
 
+# Create necessary directories for better file watching
+RUN mkdir -p .next .turbo
+
 # Expose port
 EXPOSE 3000
 
-# Start development server with Turbopack
+# Start development server with Turbopack and improved file watching
 CMD ["npm", "run", "dev"]

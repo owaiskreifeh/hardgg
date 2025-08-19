@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { Game } from '@/types/game';
-import { formatDate, truncateText, cn } from '@/lib/utils';
+import { formatDate, truncateText, cn, parseSizeToMB } from '@/lib/utils';
 
 interface GameCardProps {
   game: Game;
@@ -154,7 +154,7 @@ export function GameCard({
               <div
                 className="bg-gaming-primary h-1 rounded-full"
                 style={{
-                  width: `${(parseInt(game.repackSize) / parseInt(game.originalSize)) * 100}%`
+                  width: `${Math.min((parseSizeToMB(game.repackSize) / parseSizeToMB(game.originalSize)) * 100, 100)}%`
                 }}
               />
             </div>

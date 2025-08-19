@@ -1,4 +1,5 @@
 import { createClient } from 'redis';
+import { parseSizeToMB } from './utils';
 
 const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
 
@@ -103,8 +104,8 @@ export const gameOperations = {
       if (filters.size) {
         const gameSize = game.metadata?.repackSize;
         if (gameSize) {
-          const gameSizeNum = parseFloat(gameSize.replace(' GB', ''));
-          const filterSizeNum = parseFloat(filters.size.replace(' GB', ''));
+          const gameSizeNum = parseSizeToMB(gameSize);
+          const filterSizeNum = parseSizeToMB(filters.size);
           if (gameSizeNum > filterSizeNum) {
             return false;
           }
