@@ -20,7 +20,7 @@ The application consists of:
 
 1. **Start the development environment:**
    ```bash
-   docker-compose -f docker-compose.dev.yml up --build
+   docker-compose -f docker/docker-compose.dev.yml up --build
    ```
 
 2. **Load data into Redis:**
@@ -54,10 +54,11 @@ The application consists of:
 ## 📁 Project Structure
 
 ```
-├── Dockerfile                 # Production Docker image
-├── Dockerfile.dev            # Development Docker image
-├── docker-compose.yml        # Production services
-├── docker-compose.dev.yml    # Development services
+├── docker/
+│   ├── Dockerfile                 # Production Docker image
+│   ├── Dockerfile.dev            # Development Docker image
+│   ├── docker-compose.yml        # Production services
+│   └── docker-compose.dev.yml    # Development services
 ├── scripts/
 │   ├── load-data.js          # Data loader script (CommonJS)
 │   └── load-data.mjs         # Data loader script (ES Modules)
@@ -122,7 +123,7 @@ Each JSON file should contain an array of game objects with the following struct
 2. **Manual Loading**: Run the data loader manually:
    ```bash
    # Development
-   docker-compose -f docker-compose.dev.yml run --rm data-loader
+   docker-compose -f docker/docker-compose.dev.yml run --rm data-loader
    
    # Production
    docker-compose run --rm data-loader
@@ -158,7 +159,7 @@ Each JSON file should contain an array of game objects with the following struct
 
 2. **Start Redis:**
    ```bash
-   docker-compose -f docker-compose.dev.yml up redis -d
+   docker-compose -f docker/docker-compose.dev.yml up redis -d
    ```
 
 3. **Load data:**
@@ -178,7 +179,7 @@ Each JSON file should contain an array of game objects with the following struct
 docker build -t fitgirl-repacks:latest .
 
 # Development image
-docker build -f Dockerfile.dev -t fitgirl-repacks:dev .
+docker build -f docker/Dockerfile.dev -t fitgirl-repacks:dev .
 ```
 
 ## 📦 Deployment
