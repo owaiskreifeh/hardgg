@@ -8,12 +8,16 @@ A modern, responsive gaming hub built with Next.js 15.x, TypeScript, and Tailwin
 - **Advanced Search**: Fuzzy search with Fuse.js for accurate results
 - **Smart Filtering**: Filter by genre, size, language, developer, and more
 - **Responsive Design**: Works perfectly on desktop, tablet, and mobile
+- **Mobile-First**: Sticky search bar, floating action button, and mobile menu
 - **Grid Views**: Multiple grid sizes (small, medium, large) for different viewing preferences
 - **Game Details**: Comprehensive game information with system requirements
 - **Download Links**: Support for magnet links, torrent files, and direct downloads
-- **Performance Optimized**: Built with Next.js 15.x for optimal performance
+- **Performance Optimized**: Built with Next.js 15.x and Turbopack for optimal performance
 - **TypeScript**: Full type safety throughout the application
-- **State Management**: Zustand for efficient state management
+- **State Management**: Redux Toolkit with RTK Query for efficient state management
+- **API Routes**: RESTful API endpoints for games, search, and statistics
+- **Redis Integration**: Fast in-memory data storage and caching
+- **PWA Ready**: Progressive Web App features with service worker support
 
 ## 🛠️ Tech Stack
 
@@ -21,18 +25,19 @@ A modern, responsive gaming hub built with Next.js 15.x, TypeScript, and Tailwin
 - **Bundler**: Turbopack (Rust-based, ultra-fast development)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS with custom gaming theme
-- **State Management**: Zustand
+- **State Management**: Redux Toolkit with RTK Query
 - **Search**: Fuse.js for fuzzy search
+- **Database**: Redis for data storage and caching
 - **Icons**: Lucide React
 - **Fonts**: Google Fonts (Inter, Orbitron)
-- **Database**: Redis (for development data storage)
+- **Code Quality**: ESLint with custom clean code rules
 
 ## 📦 Installation
 
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd fitgirl-repacks-nextjs
+   cd hardgg
    ```
 
 2. **Install dependencies**
@@ -44,7 +49,22 @@ A modern, responsive gaming hub built with Next.js 15.x, TypeScript, and Tailwin
    pnpm install
    ```
 
-3. **Run the development server**
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your configuration
+   ```
+
+4. **Start Redis (for development)**
+   ```bash
+   # Using Docker
+   docker run -d -p 6379:6379 redis:alpine
+   
+   # Or install Redis locally
+   # Follow Redis installation guide for your OS
+   ```
+
+5. **Run the development server**
    ```bash
    npm run dev
    # or
@@ -53,7 +73,7 @@ A modern, responsive gaming hub built with Next.js 15.x, TypeScript, and Tailwin
    pnpm dev
    ```
 
-4. **Open your browser**
+6. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000) to see the application.
 
 ## 🏗️ Project Structure
@@ -61,19 +81,36 @@ A modern, responsive gaming hub built with Next.js 15.x, TypeScript, and Tailwin
 ```
 src/
 ├── app/                    # Next.js App Router
+│   ├── api/               # API routes
+│   │   ├── games/         # Games API endpoints
+│   │   ├── health/        # Health check endpoint
+│   │   └── ...
 │   ├── layout.tsx         # Root layout with metadata
 │   ├── page.tsx           # Home page component
 │   └── globals.css        # Global styles
 ├── components/            # React components
 │   ├── Header.tsx         # Navigation header
 │   ├── SearchBar.tsx      # Search functionality
+│   ├── StickySearchBar.tsx # Mobile sticky search
 │   ├── GameGrid.tsx       # Game grid display
 │   ├── GameCard.tsx       # Individual game card
 │   ├── FilterPanel.tsx    # Filtering and sorting
 │   ├── GameModal.tsx      # Game details modal
-│   └── LoadingSpinner.tsx # Loading states
-├── lib/                   # Utilities and store
-│   ├── store.ts           # Zustand state management
+│   ├── MobileMenu.tsx     # Mobile menu dialog
+│   ├── FloatingActionButton.tsx # Mobile FAB
+│   ├── LoadingSpinner.tsx # Loading states
+│   └── InfiniteScroll.tsx # Infinite scroll component
+├── store/                 # Redux Toolkit store
+│   ├── index.ts           # Store configuration
+│   ├── Provider.tsx       # Redux provider
+│   ├── slices/            # Redux slices
+│   │   ├── gamesSlice.ts  # Games state management
+│   │   ├── searchSlice.ts # Search state management
+│   │   └── uiSlice.ts     # UI state management
+│   ├── hooks/             # Custom Redux hooks
+│   └── selectors.ts       # State selectors
+├── lib/                   # Utilities and services
+│   ├── redis.ts           # Redis operations
 │   └── utils.ts           # Utility functions
 └── types/                 # TypeScript type definitions
     └── game.ts            # Game-related types
@@ -85,6 +122,7 @@ src/
 - Use the search bar to find games by title, description, genre, or developer
 - Search suggestions appear as you type
 - Fuzzy search provides accurate results even with typos
+- Mobile users can use the sticky search bar at the top
 
 ### Filtering Games
 - **Genre**: Filter by game genres (Action, RPG, Strategy, etc.)
@@ -103,6 +141,12 @@ src/
 - **Medium**: Balanced view with moderate detail
 - **Large**: Detailed view with full information
 
+### Mobile Features
+- **Sticky Search Bar**: Always accessible search at the top
+- **Floating Action Button**: Quick access to filters and menu
+- **Mobile Menu**: Slide-in menu with search and filter options
+- **Touch-Friendly**: Optimized for touch interactions
+
 ### Game Details
 Click on any game card to view:
 - Full game description
@@ -110,6 +154,26 @@ Click on any game card to view:
 - Download links (magnet, torrent, direct)
 - Game features and tags
 - Release information
+
+## 🔌 API Endpoints
+
+### Games API
+- `GET /api/games` - Get all games with pagination and filtering
+- `GET /api/games/[id]` - Get specific game by ID
+- `GET /api/games/stats` - Get game statistics
+
+### Health Check
+- `GET /api/health` - Application health status
+
+### Query Parameters
+- `q` - Search query
+- `genre` - Filter by genre (comma-separated)
+- `size` - Filter by size
+- `language` - Filter by language (comma-separated)
+- `sortBy` - Sort field (title, releaseDate, size)
+- `sortOrder` - Sort order (asc, desc)
+- `page` - Page number for pagination
+- `limit` - Items per page
 
 ## 🎨 Customization
 
@@ -122,7 +186,7 @@ The application uses a custom gaming theme defined in `tailwind.config.js`. You 
 - **Cards**: Dark theme with subtle borders
 
 ### Adding New Games
-To add new games, modify the `mockGames` array in `src/lib/store.ts` or integrate with a real API:
+Games are stored in Redis. You can add new games through the API or by modifying the data loading scripts:
 
 ```typescript
 const newGame: Game = {
@@ -148,7 +212,17 @@ All components use Tailwind CSS classes with custom gaming utilities. You can mo
 ### Vercel (Recommended)
 1. Push your code to GitHub
 2. Connect your repository to Vercel
-3. Deploy automatically
+3. Set up environment variables in Vercel dashboard
+4. Deploy automatically
+
+### Docker Deployment
+```bash
+# Build the production image
+docker build -t fitgirl-repacks .
+
+# Run with Docker Compose
+docker-compose up -d
+```
 
 ### Other Platforms
 The application can be deployed to any platform that supports Next.js:
@@ -164,10 +238,11 @@ npm start
 ## 📱 PWA Features
 
 The application includes PWA features:
-- Web app manifest
-- Service worker support
+- Web app manifest (`public/manifest.json`)
+- Service worker support (`sw.js`)
 - Responsive design
 - Offline capabilities (can be enhanced)
+- App icons in multiple sizes
 
 ## 🔧 Development
 
@@ -205,6 +280,7 @@ docker-compose -f docker-compose.dev.yml up -d --build
 - **📦 Redis**: In-memory data storage for development
 - **🎯 TypeScript**: Full type safety and IntelliSense
 - **🎨 Tailwind**: Hot reloading for CSS changes
+- **🔍 ESLint**: Code quality and clean code enforcement
 
 ### Local Development
 
@@ -213,21 +289,43 @@ docker-compose -f docker-compose.dev.yml up -d --build
 - `npm run build` - Build for production
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
+- `npm run lint:fix` - Fix ESLint issues automatically
+- `npm run type-check` - Run TypeScript type checking
+- `npm run format` - Format code with Prettier
+- `npm run format:check` - Check code formatting
+- `npm run clean` - Clean build artifacts
 
-### Code Standards
-- Follow TypeScript best practices
-- Use functional components with hooks
-- Implement proper error handling
-- Write clean, readable code
-- Follow the established component structure
+### Code Quality Standards
+
+This project follows clean code principles with comprehensive ESLint rules:
+
+- **Clean Code Guidelines**: Meaningful names, single responsibility, DRY principle
+- **TypeScript Best Practices**: Full type safety and modern TypeScript features
+- **React Best Practices**: Functional components, hooks, proper state management
+- **Performance Optimization**: Efficient rendering, proper memoization
+- **Accessibility**: ARIA labels, keyboard navigation, screen reader support
+
+## 📚 Documentation
+
+- [Development Guide](DEVELOPMENT.md) - Detailed development setup and guidelines
+- [Mobile Features](MOBILE_FEATURES.md) - Mobile-specific features and implementation
+- [Docker Guide](README-DOCKER.md) - Docker setup and deployment
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Follow the code quality standards and ESLint rules
+4. Make your changes
+5. Add tests if applicable
+6. Submit a pull request
+
+### Development Guidelines
+- Follow the established component structure (1 component per file)
+- Use TypeScript for all new code
+- Implement proper error handling
+- Write clean, readable code following clean code principles
+- Test your changes thoroughly
 
 ## 📄 License
 
@@ -237,6 +335,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 - **FitGirl Repacks** - For the concept and inspiration
 - **Next.js Team** - For the amazing framework
+- **Redux Toolkit Team** - For excellent state management
 - **Tailwind CSS** - For the utility-first CSS framework
 - **Lucide** - For the beautiful icons
 
