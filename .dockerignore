@@ -90,5 +90,4 @@ jspm_packages/
 tmp/
 temp/
 
-# Results directory (contains large JSON files)
-results/
+
