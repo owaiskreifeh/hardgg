@@ -38,10 +38,11 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 
 
-# Copy scripts directory, src/lib, and node_modules for data-loader
+# Copy scripts directory, src/lib, node_modules, and results for data-loader
 COPY --from=builder /app/scripts ./scripts
 COPY --from=builder /app/src/lib ./src/lib
 COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/results ./results
 
 # Set the correct permission for prerender cache
 RUN mkdir .next

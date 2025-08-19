@@ -6,7 +6,7 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
     ports:
-      - "3000:3000"
+      - "9581:3000"
     environment:
       - NODE_ENV=production
       - REDIS_URL=redis://redis:6379
@@ -18,8 +18,6 @@ services:
 
   redis:
     image: redis:7-alpine
-    ports:
-      - "6379:6379"
     volumes:
       - redis-data:/data
     restart: unless-stopped
@@ -36,8 +34,6 @@ services:
     depends_on:
       - redis
     command: ["node", "scripts/load-data.js"]
-    volumes:
-      - ./results:/app/results:ro
     networks:
       - app-network
 
