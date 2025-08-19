@@ -7,7 +7,13 @@ export async function GET(request: NextRequest) {
     const games = await gameOperations.getAllGames();
 
     // Calculate statistics
-    const stats = {
+    const stats: {
+      totalGames: number;
+      genres: Record<string, number>;
+      languages: Record<string, number>;
+      sizeRanges: Record<string, number>;
+      averageSize: number;
+    } = {
       totalGames: games.length,
       genres: {},
       languages: {},

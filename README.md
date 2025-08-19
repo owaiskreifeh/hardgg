@@ -10,14 +10,15 @@ A modern, responsive gaming hub built with Next.js 15.x, TypeScript, and Tailwin
 - **Responsive Design**: Works perfectly on desktop, tablet, and mobile
 - **Mobile-First**: Sticky search bar, floating action button, and mobile menu
 - **Grid Views**: Multiple grid sizes (small, medium, large) for different viewing preferences
-- **Game Details**: Comprehensive game information with system requirements
-- **Download Links**: Support for magnet links, torrent files, and direct downloads
+- **Game Details**: Comprehensive game information with metadata
 - **Performance Optimized**: Built with Next.js 15.x and Turbopack for optimal performance
 - **TypeScript**: Full type safety throughout the application
 - **State Management**: Redux Toolkit with RTK Query for efficient state management
 - **API Routes**: RESTful API endpoints for games, search, and statistics
 - **Redis Integration**: Fast in-memory data storage and caching
-- **PWA Ready**: Progressive Web App features with service worker support
+- **Infinite Scroll**: Smooth pagination with infinite scroll loading
+- **Debug Panel**: Development tools for testing and debugging
+- **Loading States**: Optimized loading indicators and skeleton screens
 
 ## 🛠️ Tech Stack
 
@@ -31,6 +32,7 @@ A modern, responsive gaming hub built with Next.js 15.x, TypeScript, and Tailwin
 - **Icons**: Lucide React
 - **Fonts**: Google Fonts (Inter, Orbitron)
 - **Code Quality**: ESLint with custom clean code rules
+- **Package Manager**: npm
 
 ## 📦 Installation
 
@@ -43,10 +45,6 @@ A modern, responsive gaming hub built with Next.js 15.x, TypeScript, and Tailwin
 2. **Install dependencies**
    ```bash
    npm install
-   # or
-   yarn install
-   # or
-   pnpm install
    ```
 
 3. **Set up environment variables**
@@ -67,10 +65,6 @@ A modern, responsive gaming hub built with Next.js 15.x, TypeScript, and Tailwin
 5. **Run the development server**
    ```bash
    npm run dev
-   # or
-   yarn dev
-   # or
-   pnpm dev
    ```
 
 6. **Open your browser**
@@ -83,8 +77,10 @@ src/
 ├── app/                    # Next.js App Router
 │   ├── api/               # API routes
 │   │   ├── games/         # Games API endpoints
-│   │   ├── health/        # Health check endpoint
-│   │   └── ...
+│   │   │   ├── [id]/      # Individual game endpoint
+│   │   │   ├── stats/     # Game statistics endpoint
+│   │   │   └── route.ts   # Games list endpoint
+│   │   └── health/        # Health check endpoint
 │   ├── layout.tsx         # Root layout with metadata
 │   ├── page.tsx           # Home page component
 │   └── globals.css        # Global styles
@@ -99,7 +95,8 @@ src/
 │   ├── MobileMenu.tsx     # Mobile menu dialog
 │   ├── FloatingActionButton.tsx # Mobile FAB
 │   ├── LoadingSpinner.tsx # Loading states
-│   └── InfiniteScroll.tsx # Infinite scroll component
+│   ├── InfiniteScroll.tsx # Infinite scroll component
+│   └── DebugPanel.tsx     # Development debug panel
 ├── store/                 # Redux Toolkit store
 │   ├── index.ts           # Store configuration
 │   ├── Provider.tsx       # Redux provider
@@ -150,10 +147,14 @@ src/
 ### Game Details
 Click on any game card to view:
 - Full game description
-- System requirements (minimum and recommended)
-- Download links (magnet, torrent, direct)
+- Game metadata (companies, languages, sizes)
 - Game features and tags
 - Release information
+
+### Development Features
+- **Debug Panel**: Development tools for testing search and filters
+- **Infinite Scroll**: Smooth pagination for large datasets
+- **Loading States**: Optimized loading indicators
 
 ## 🔌 API Endpoints
 
@@ -221,7 +222,7 @@ All components use Tailwind CSS classes with custom gaming utilities. You can mo
 docker build -t fitgirl-repacks .
 
 # Run with Docker Compose
-docker-compose up -d
+docker-compose -f docker/docker-compose.yml up -d
 ```
 
 ### Other Platforms
@@ -234,15 +235,6 @@ npm run build
 # Start the production server
 npm start
 ```
-
-## 📱 PWA Features
-
-The application includes PWA features:
-- Web app manifest (`public/manifest.json`)
-- Service worker support (`sw.js`)
-- Responsive design
-- Offline capabilities (can be enhanced)
-- App icons in multiple sizes
 
 ## 🔧 Development
 
@@ -268,10 +260,10 @@ chmod +x scripts/dev.sh
 #### Manual Docker Setup
 ```bash
 # Start the development environment
-docker-compose -f docker-compose.dev.yml up --build
+docker-compose -f docker/docker-compose.dev.yml up --build
 
 # Or run in detached mode
-docker-compose -f docker-compose.dev.yml up -d --build
+docker-compose -f docker/docker-compose.dev.yml up -d --build
 ```
 
 #### Development Features
@@ -281,6 +273,7 @@ docker-compose -f docker-compose.dev.yml up -d --build
 - **🎯 TypeScript**: Full type safety and IntelliSense
 - **🎨 Tailwind**: Hot reloading for CSS changes
 - **🔍 ESLint**: Code quality and clean code enforcement
+- **🐛 Debug Panel**: Development tools for testing
 
 ### Local Development
 
@@ -294,6 +287,7 @@ docker-compose -f docker-compose.dev.yml up -d --build
 - `npm run format` - Format code with Prettier
 - `npm run format:check` - Check code formatting
 - `npm run clean` - Clean build artifacts
+- `npm run dev:docker` - Start development with Docker
 
 ### Code Quality Standards
 
@@ -307,9 +301,9 @@ This project follows clean code principles with comprehensive ESLint rules:
 
 ## 📚 Documentation
 
-- [Development Guide](DEVELOPMENT.md) - Detailed development setup and guidelines
-- [Mobile Features](MOBILE_FEATURES.md) - Mobile-specific features and implementation
-- [Docker Guide](README-DOCKER.md) - Docker setup and deployment
+- [Development Guide](docs/DEVELOPMENT.md) - Detailed development setup and guidelines
+- [Mobile Features](docs/MOBILE_FEATURES.md) - Mobile-specific features and implementation
+- [Docker Guide](docs/README-DOCKER.md) - Docker setup and deployment
 
 ## 🤝 Contributing
 

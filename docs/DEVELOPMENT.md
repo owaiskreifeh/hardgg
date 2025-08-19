@@ -44,7 +44,7 @@ cp .env.example .env.local
 npm run dev
 
 # Start with Docker
-docker-compose -f docker-compose.dev.yml up
+docker-compose -f docker/docker-compose.dev.yml up
 ```
 
 ## Code Quality & Standards
@@ -307,7 +307,7 @@ npm start
 docker build -t hardgg .
 
 # Run with Docker Compose
-docker-compose up -d
+docker-compose -f docker/docker-compose.yml up -d
 ```
 
 ## Troubleshooting

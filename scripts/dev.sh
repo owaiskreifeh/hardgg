@@ -11,7 +11,7 @@ fi
 
 # Build and start the development environment
 echo "📦 Building and starting containers..."
-docker-compose -f docker-compose.dev.yml up --build
+docker-compose -f docker/docker-compose.dev.yml up --build
 
 echo "✅ Development environment started!"
 echo "🌐 Application will be available at: http://localhost:3000"

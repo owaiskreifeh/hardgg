@@ -12,7 +12,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "clean": "rm -rf .next out dist",
-    "dev:docker": "docker-compose -f docker-compose.dev.yml up"
+    "dev:docker": "docker-compose -f docker/docker-compose.dev.yml up"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
