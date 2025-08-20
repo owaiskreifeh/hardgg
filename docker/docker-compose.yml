@@ -1,7 +1,8 @@
 version: '3.8'
-
+name: hardgg
 services:
   app:
+    container_name: hardgg-container
     build:
       context: ..
       dockerfile: docker/Dockerfile
